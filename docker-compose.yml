@@ -1,12 +1,11 @@
-version: "3.8"
-
 services:
-  ros2:
+  sitl:
+    image: itskalvik/sgp-tools:sitl-humble-garden
     build:
-      context: docker/ros2
+      context: docker
       args:
-        - user_id=1000
-        - ros_ws=/home/dockeruser/dev_ws
+        - ROS_DISTRO=humble
+        - GZ_VERSION=garden
 
     # Enabling GPU access with Compose
     # https://docs.docker.com/compose/gpu-support/
@@ -29,11 +28,12 @@ services:
       - PULSE_SERVER
 
     volumes:
-      - ./:/home/dockeruser/project
-      - ./dev_ws:/home/dockeruser/dev_ws
-      - ./docker/ros2/.ros:/home/dockeruser/.ros
-      - ./docker/ros2/.gazebo/:/home/dockeruser/.gazebo
+      - ./ros2_ws:/home/admin/ros2_ws
+      - /dev:/dev
 
       # WSLg settings
       - /mnt/wslg:/mnt/wslg
       - /tmp/.X11-unix:/tmp/.X11-unix
+
+    network_mode: host
+    privileged: true
