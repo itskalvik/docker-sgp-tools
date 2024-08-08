@@ -45,8 +45,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME \
-    && usermod -a -G dialout $USERNAME \
-    && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc
+    && usermod -a -G dialout $USERNAME
 
 # Switch to the non-root user for the rest of the installation
 USER $USERNAME
@@ -76,7 +75,8 @@ RUN sudo apt-get -q update \
     && sudo rm -rf /var/lib/apt/lists/* \
     && wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh \
     && chmod +x install_geographiclib_datasets.sh \
-    && sudo bash ./install_geographiclib_datasets.sh
+    && sudo bash ./install_geographiclib_datasets.sh \
+    && rm install_geographiclib_datasets.sh
 
 # Setup ArduPilot SITL
 ENV SKIP_AP_EXT_ENV=1 SKIP_AP_GRAPHIC_ENV=1 SKIP_AP_COV_ENV=1 SKIP_AP_GIT_CHECK=1
@@ -114,6 +114,15 @@ ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 ENV QT_X11_NO_MITSHM 1
 
-COPY ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
+# Build ROS2 workspace with sgptools
+COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
+RUN python3 -m pip install --no-cache-dir sgptools geopandas pygeodesy
+RUN cd /home/$USERNAME/ros2_ws/ \
+    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && colcon build --symlink-install \
+    && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
+    && echo "source /home/${USERNAME}/ros2_ws/install/setup.sh " >> /home/$USERNAME/.bashrc
+
+COPY docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]
 CMD ["sleep", "infinity"]

@@ -1,0 +1,3 @@
+[submodule "ros2_ws/src/ros_sgp_tools"]
+	path = ros2_ws/src/ros_sgp_tools
+	url = https://github.com/itskalvik/ros_sgp_tools

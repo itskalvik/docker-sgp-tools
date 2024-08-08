@@ -2,7 +2,8 @@ services:
   sitl:
     image: itskalvik/sgp-tools:sitl-humble-garden
     build:
-      context: docker
+      context: ./
+      dockerfile: docker/Dockerfile
       args:
         - ROS_DISTRO=humble
         - GZ_VERSION=garden
@@ -28,7 +29,7 @@ services:
       - PULSE_SERVER
 
     volumes:
-      - ./ros2_ws:/home/admin/ros2_ws
+      - ./ros2_ws/src:/home/admin/ros2_ws/src
       - /dev:/dev
 
       # WSLg settings
