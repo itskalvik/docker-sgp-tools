@@ -79,10 +79,14 @@ RUN sudo apt-get -q update \
     && rm install_geographiclib_datasets.sh
 
 # Setup ArduPilot SITL
+ARG SITL_VEHICLE=ardurover
 ENV SKIP_AP_EXT_ENV=1 SKIP_AP_GRAPHIC_ENV=1 SKIP_AP_COV_ENV=1 SKIP_AP_GIT_CHECK=1
 RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules \
     && cd /home/$USERNAME/ardupilot \
-    && Tools/environment_install/install-prereqs-ubuntu.sh -y
+    && Tools/environment_install/install-prereqs-ubuntu.sh -y \
+    && cd /home/$USERNAME/ardupilot \
+    && modules/waf/waf-light configure --board sitl \
+    && modules/waf/waf-light build --target bin/$SITL_VEHICLE
 
 # Setup ardupilot_gazebo plugin
 RUN cd /home/$USERNAME/ \
@@ -116,13 +120,13 @@ ENV QT_X11_NO_MITSHM 1
 
 # Build ROS2 workspace with sgptools
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
-RUN python3 -m pip install --no-cache-dir sgptools geopandas pygeodesy
 RUN cd /home/$USERNAME/ros2_ws/ \
+    && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install \
     && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
     && echo "source /home/${USERNAME}/ros2_ws/install/setup.sh " >> /home/$USERNAME/.bashrc
 
-COPY docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
+COPY sitl-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]
 CMD ["sleep", "infinity"]

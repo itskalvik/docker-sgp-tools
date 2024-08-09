@@ -3,7 +3,7 @@ services:
     image: itskalvik/sgp-tools:sitl-humble-garden
     build:
       context: ./
-      dockerfile: docker/Dockerfile
+      dockerfile: sitl-docker/Dockerfile
       args:
         - ROS_DISTRO=humble
         - GZ_VERSION=garden
