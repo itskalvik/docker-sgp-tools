@@ -14,12 +14,12 @@
 ```bash
 git clone https://github.com/itskalvik/docker-sgp-tools.git
 cd docker-sgp-tools
-docker-compose -f sitl-compose.yml build
+docker-compose -f sitl-compose.yml build --pull
 docker-compose -f sitl-compose.yml up -d
 docker-compose -f sitl-compose.yml exec sitl bash
 ```
 ### Running SGP-Tools Online IPP with Gazebo/ArduRover Simulator
-Run the following commands in separate terminals in the docker image. 
+Run the following commands in separate terminals in the docker image.
 
 - Launch Gazebo with the AION R1 UGV:
     ```
@@ -37,8 +37,6 @@ Run the following commands in separate terminals in the docker image.
     ```
 
 ## Other commands
-
-### docker-compose
 
 ```bash
 docker-compose -f sitl-compose.yml stop
