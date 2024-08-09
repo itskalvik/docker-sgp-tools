@@ -1,3 +1,9 @@
+<div style="text-align:left">
+<p><a href="http://itskalvik.com/sgp-tools">
+<img width="472" src="SGP-Tools.png">
+</a></p>
+</div>
+
 # docker-sgp-tools
 This repo provides the following docker-compose scripts:
 - ```robot-compose.yml```: A minimal docker container used to run SGP-Tools ROS2 package on ArduPilot-based robots.
