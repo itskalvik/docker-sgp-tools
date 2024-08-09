@@ -1,15 +1,14 @@
 services:
   sgptools:
-    image: itskalvik/sgp-tools:sitl-humble-garden
+    image: itskalvik/sgp-tools:robot-humble
     build:
       context: ./
       platforms:
           - "linux/amd64"
           - "linux/arm64"
-      dockerfile: sitl-docker/Dockerfile
+      dockerfile: robot-docker/Dockerfile
       args:
         - ROS_DISTRO=humble
-        - GZ_VERSION=garden
 
     # Enabling GPU access with Compose
     # https://docs.docker.com/compose/gpu-support/
@@ -24,20 +23,10 @@ services:
       # Set a fancy prompt (See ~/.bashrc in the container)
       - TERM=xterm-256color
 
-      # WSLg settings
-      # https://www.reddit.com/r/bashonubuntuonwindows/comments/n2nthu/can_i_use_the_new_wslg_with_docker/
-      - DISPLAY
-      - WAYLAND_DISPLAY
-      - XDG_RUNTIME_DIR
-      - PULSE_SERVER
-
     volumes:
-      - ./ros2_ws/src:/home/admin/ros2_ws/src
+      - ./ros2_ws/src:/home/ros2_ws/src
       - /dev:/dev
-
-      # WSLg settings
-      - /mnt/wslg:/mnt/wslg
-      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /var/run/dbus:/var/run/dbus
 
     network_mode: host
     privileged: true

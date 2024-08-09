@@ -20,6 +20,10 @@ RUN apt-get -q update \
     gnupg \
     nano \
     software-properties-common \
+    libhdf5-dev \
+    netcdf-bin \
+    libnetcdf-dev \
+    libgeographic-dev \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
@@ -122,6 +126,10 @@ ENV QT_X11_NO_MITSHM 1
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/ \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
+    && sudo apt-get install -y -qq --no-install-recommends ros-$ROS_DISTRO-cv-bridge \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/* \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install \
     && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
