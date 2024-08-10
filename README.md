@@ -18,7 +18,6 @@ This repo provides the following docker-compose scripts:
 ## Getting Started 
 ### Starting the Containers
 
-
 Run the following commands to start the SITL docker container:
 
 ```bash
@@ -39,7 +38,7 @@ Use ```docker-compose -f sitl-compose.yml exec sgptools bash``` to get a new ter
     ```
     gz sim -v4 -r r1_rover_runway.sdf
     ```
-    To simulate a BlueBoat refer to this [documentation](https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/BlueBoat.md).
+    To simulate a BlueBoat refer to this [documentation](https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/BlueBoat.md). Note that the container already has Wave Sim installed in it.
 
 - Launch [ArduRover SITL](https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html):
     ```
@@ -63,7 +62,7 @@ docker buildx use multi-arch
 
 Next, clone the repo and build the container. 
 ```bash
-git clone https://github.com/itskalvik/docker-sgp-tools.git
+git clone --recurse-submodules https://github.com/itskalvik/docker-sgp-tools.git
 cd docker-sgp-tools
 docker-compose -f sitl-compose.yml build 
 ```
@@ -83,3 +82,8 @@ Use ```robot-compose.yml``` to build the minimal docker container.
     ```bash
     docker-compose -f sitl-compose.yml stop
     ```
+
+## References
+Based on Dockerfiles from the following repos:
+- https://github.com/Robotic-Decision-Making-Lab/blue
+- https://github.com/ryomo/ros2-gazebo-docker

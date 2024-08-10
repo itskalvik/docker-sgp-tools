@@ -1,7 +1,3 @@
-# Based on Dockerfiles from the following repos:
-# https://github.com/Robotic-Decision-Making-Lab/blue
-# https://github.com/ryomo/ros2-gazebo-docker
-
 ARG ROS_DISTRO=humble
 FROM  osrf/ros:$ROS_DISTRO-desktop
 
@@ -83,14 +79,13 @@ RUN sudo apt-get -q update \
     && rm install_geographiclib_datasets.sh
 
 # Setup ArduPilot SITL
-ARG SITL_VEHICLE=ardurover
 ENV SKIP_AP_EXT_ENV=1 SKIP_AP_GRAPHIC_ENV=1 SKIP_AP_COV_ENV=1 SKIP_AP_GIT_CHECK=1
 RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules \
     && cd /home/$USERNAME/ardupilot \
     && Tools/environment_install/install-prereqs-ubuntu.sh -y \
     && cd /home/$USERNAME/ardupilot \
     && modules/waf/waf-light configure --board sitl \
-    && modules/waf/waf-light build --target bin/$SITL_VEHICLE
+    && modules/waf/waf-light build
 
 # Setup ardupilot_gazebo plugin
 RUN cd /home/$USERNAME/ \
@@ -134,6 +129,25 @@ RUN cd /home/$USERNAME/ros2_ws/ \
     && colcon build --symlink-install \
     && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
     && echo "source /home/${USERNAME}/ros2_ws/install/setup.sh " >> /home/$USERNAME/.bashrc
+
+# Build Wave Sim
+RUN sudo apt-get -q update \
+    && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /home/$USERNAME/gz_ws/src \
+    && cd /home/$USERNAME/gz_ws/src \
+    && git clone https://github.com/srmainwaring/asv_wave_sim.git \
+    && cd /home/$USERNAME/gz_ws/ \
+    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && colcon build --symlink-install --merge-install --cmake-args \
+                    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                    -DBUILD_TESTING=ON \
+                    -DCMAKE_CXX_STANDARD=17 \
+    && echo "source /home/${USERNAME}/gz_ws/install/setup.sh " >> /home/$USERNAME/.bashrc \
+    && cd /home/$USERNAME/gz_ws/src/asv_wave_sim/gz-waves/src/gui/plugins/waves_control \
+    && mkdir build && cd build && cmake .. && make
 
 COPY sitl-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]
