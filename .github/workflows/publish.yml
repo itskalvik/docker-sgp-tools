@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - 'main'
+
+defaults:
+  run:
+    working-directory: ./
+
 jobs:
   deploy:
     name: build && push image to docker hub
@@ -26,6 +31,6 @@ jobs:
           push: true
           tags: itskalvik/sgp-tools:sitl-humble-garden
           platforms: linux/amd64,linux/arm64
-          context: .
+          context: ./
           file: sitl-docker/Dockerfile
           
