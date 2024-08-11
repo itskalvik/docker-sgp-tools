@@ -36,7 +36,7 @@ jobs:
           files: ./robot-compose.yml
           set: sgptools.platform=linux/amd64,linux/arm64
 
-  bake-sitl/arm64:
+  bake-sitl-arm64:
     runs-on: ubuntu-latest
     steps:
       -
@@ -66,7 +66,7 @@ jobs:
           files: ./sitl-compose.yml
           set: sgptools.platform=linux/arm64
 
-  bake-sitl/amd64:
+  bake-sitl-amd64:
     runs-on: ubuntu-latest
     steps:
       -
