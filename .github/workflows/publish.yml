@@ -26,4 +26,4 @@ jobs:
         uses: docker/bake-action@v5
         with:
           push: true
-          files: ./robot-compose.yml
+          files: ./robot-compose.yml,./sitl-compose.yml
