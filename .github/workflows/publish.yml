@@ -27,5 +27,5 @@ jobs:
           tags: itskalvik/sgp-tools:sitl-humble-garden
           platforms: linux/amd64,linux/arm64
           context: .
-          file: ./sitl-docker/Dockerfile
+          file: sitl-docker/Dockerfile
           
