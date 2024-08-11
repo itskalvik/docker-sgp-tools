@@ -31,11 +31,11 @@ jobs:
         with:
           push: true
           files: ./robot-compose.yml
-          set: target.platform=linux/amd64,linux/arm64
+          set: *.platform=linux/amd64,linux/arm64
       -
         name: Build and push sitl container
         uses: docker/bake-action@v5
         with:
           push: true
           files: ./sitl-compose.yml
-          set: target.platform=linux/amd64,linux/arm64
+          set: *.platform=linux/amd64,linux/arm64
