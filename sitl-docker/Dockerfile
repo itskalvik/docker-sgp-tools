@@ -80,23 +80,23 @@ RUN sudo apt-get -q update \
 
 # Setup ArduPilot SITL
 ENV SKIP_AP_EXT_ENV=1 SKIP_AP_GRAPHIC_ENV=1 SKIP_AP_COV_ENV=1 SKIP_AP_GIT_CHECK=1
-RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules \
+RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules --depth 1 -b Rover-4.5 \
     && cd /home/$USERNAME/ardupilot \
     && Tools/environment_install/install-prereqs-ubuntu.sh -y \
     && cd /home/$USERNAME/ardupilot \
     && modules/waf/waf-light configure --board sitl \
-    && modules/waf/waf-light build
+    && modules/waf/waf-light build --target bin/ardurover
 
 # Setup ardupilot_gazebo plugin
 RUN cd /home/$USERNAME/ \
-    && git clone https://github.com/ArduPilot/ardupilot_gazebo.git \
+    && git clone https://github.com/ArduPilot/ardupilot_gazebo.git --depth 1 \
     && cd ardupilot_gazebo \
     && mkdir build \
     && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     && make -j4 \
     && cd /home/$USERNAME/ \
-    && git clone https://github.com/ArduPilot/SITL_Models.git 
+    && git clone https://github.com/ArduPilot/SITL_Models.git --depth 1
 
 # Install NVIDIA software
 RUN sudo apt-get update \
@@ -138,7 +138,7 @@ RUN sudo apt-get -q update \
     && sudo rm -rf /var/lib/apt/lists/* \
     && mkdir -p /home/$USERNAME/gz_ws/src \
     && cd /home/$USERNAME/gz_ws/src \
-    && git clone https://github.com/srmainwaring/asv_wave_sim.git \
+    && git clone https://github.com/srmainwaring/asv_wave_sim.git --depth 1 \
     && cd /home/$USERNAME/gz_ws/ \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install --merge-install --cmake-args \
