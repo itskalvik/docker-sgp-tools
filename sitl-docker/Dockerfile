@@ -120,6 +120,7 @@ ENV QT_X11_NO_MITSHM 1
 # Build ROS2 workspace with sgptools
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/ \
+    && python3 -m pip install --no-cache-dir setuptools wheel pip -U \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && sudo apt-get install -y -qq --no-install-recommends ros-$ROS_DISTRO-cv-bridge \
     && sudo apt-get autoremove -y \
