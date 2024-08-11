@@ -33,7 +33,7 @@ Use ```robot-compose.yml``` to run the minimal docker container.
 ### Running SGP-Tools Online IPP with Gazebo/ArduRover Simulator
 
 <div style="text-align:left">
-<img width="650" src=".assets/demo.png">
+<img width="1000" src=".assets/demo.png">
 </a></p>
 </div>
 
