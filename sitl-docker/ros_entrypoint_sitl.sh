@@ -22,8 +22,10 @@ $HOME/gz_ws/install/lib
 export GZ_GUI_PLUGIN_PATH=$GZ_GUI_PLUGIN_PATH:\
 $HOME/gz_ws/src/asv_wave_sim/gz-waves/src/gui/plugins/waves_control/build
 
-# Add Mavproxy path
+# Add Mavproxy and sim_vehicle.py paths
 export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$HOME/ardupilot/Tools/autotest
+export PATH=/usr/lib/ccache:$PATH
 
 # Source ROS2
 source /ros_entrypoint.sh
