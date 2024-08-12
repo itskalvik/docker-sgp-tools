@@ -39,12 +39,30 @@ jobs:
   bake-sitl:
     runs-on: ubuntu-latest
     steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
+      - name: "Free up disk space"
+        run: |
+          sudo apt-get -qq purge build-essential ghc*
+          sudo apt-get clean
+          docker system prune -af
+          sudo mkdir /mnt/ccache
+          mkdir ${{ env.CCACHE_DIR }}
+          sudo mount --bind ${{ env.CCACHE_DIR }} /mnt/ccache
+          sudo rm -rf /usr/local/*
+          sudo rm -rf \
+            "$AGENT_TOOLSDIRECTORY" \
+            /opt/google/chrome \
+            /opt/microsoft/msedge \
+            /opt/microsoft/powershell \
+            /opt/pipx \
+            /usr/lib/mono \
+            /usr/local/julia* \
+            /usr/local/lib/android \
+            /usr/local/lib/node_modules \
+            /usr/local/share/chromium \
+            /usr/local/share/powershell \
+            /usr/share/dotnet \
+            /usr/share/swift
+          df -h /
       -
         name: Checkout
         uses: actions/checkout@v4
