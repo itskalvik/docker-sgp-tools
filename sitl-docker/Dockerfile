@@ -3,37 +3,6 @@ FROM  osrf/ros:$ROS_DISTRO-desktop
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install apt general packages
-RUN apt-get -q update \
-    && apt-get -q -y upgrade \
-    && apt-get -q install --no-install-recommends -y \
-    git \
-    sudo \
-    python3-pip \
-    python3-dev \
-    lsb-release \
-    wget \
-    gnupg \
-    nano \
-    software-properties-common \
-    libhdf5-dev \
-    libgeographic-dev \
-    && apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Gazebo Garden: https://gazebosim.org/docs/garden/install_ubuntu
-ARG GZ_VERSION=garden
-ENV GZ_VERSION=$GZ_VERSION
-RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
-    && sudo apt-get -q update \
-    && sudo apt-get -y --quiet --no-install-recommends install \
-    gz-$GZ_VERSION \
-    && sudo apt-get autoremove -y \
-    && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/*
-
 # Configure a new non-root user
 ARG USERNAME=admin
 ARG USER_UID=1000
@@ -49,6 +18,37 @@ RUN groupadd --gid $USER_GID $USERNAME \
 USER $USERNAME
 ENV USER=$USERNAME
 WORKDIR /home/$USERNAME
+
+# Install apt general packages
+RUN sudo apt-get -q update \
+    && sudo apt-get -q -y upgrade \
+    && sudo apt-get -q install --no-install-recommends -y \
+    git \
+    sudo \
+    python3-pip \
+    python3-dev \
+    lsb-release \
+    wget \
+    gnupg \
+    nano \
+    software-properties-common \
+    libhdf5-dev \
+    libgeographic-dev \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/*
+
+# Install Gazebo Garden: https://gazebosim.org/docs/garden/install_ubuntu
+ARG GZ_VERSION=garden
+ENV GZ_VERSION=$GZ_VERSION
+RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+    && sudo apt-get -q update \
+    && sudo apt-get -y --quiet --no-install-recommends install \
+    gz-$GZ_VERSION \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # Install MAVROS and ArduPilot dependencies 
 RUN sudo apt-get -q update \
