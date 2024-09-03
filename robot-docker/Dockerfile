@@ -10,8 +10,6 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     && apt-get -y install libc-bin \
     && apt-get -y install \
     libhdf5-dev \
-    netcdf-bin \
-    libnetcdf-dev \
     git \
     nano \
     python3-pip \

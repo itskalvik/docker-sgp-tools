@@ -17,8 +17,6 @@ RUN apt-get -q update \
     nano \
     software-properties-common \
     libhdf5-dev \
-    netcdf-bin \
-    libnetcdf-dev \
     libgeographic-dev \
     && apt-get autoremove -y \
     && apt-get clean -y \
