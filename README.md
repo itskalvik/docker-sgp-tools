@@ -5,9 +5,12 @@
 </div>
 
 # docker-sgp-tools
-This repo provides the following docker-compose scripts:
-- ```robot-compose.yml```: A minimal docker container used to run SGP-Tools ROS2 package on ArduPilot-based robots.
-- ```sitl-compose.yml```: A GUI-based docker container with ROS2, Gazebo, ArduPilot SITL, and SGP-Tools used for simulating ArduPilot vehicles and testing SGP-Tools IPP code. 
+The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package provides the following docker-compose scripts:
+
+* ```robot-compose.yml```: A minimal docker container used to run [SGP-Tools](http://itskalvik.com/sgp-tools) [ROS2 package](https://github.com/itskalvik/ros_sgp_tools) on ArduPilot-based robots.
+* ```sitl-compose.yml```: A GUI-based docker container with ROS2, Gazebo, ArduPilot SITL, and [SGP-Tools](http://itskalvik.com/sgp-tools) used for simulating ArduPilot vehicles and testing SGP-Tools IPP code. 
+
+![Image title](.assets/docker_ros2_ardupilot.png)
 
 ### Prerequisites
 
@@ -30,12 +33,9 @@ docker-compose -f sitl-compose.yml exec sgptools bash
 
 Use ```robot-compose.yml``` to run the minimal docker container. 
 
-### Running SGP-Tools Online IPP with Gazebo/ArduRover Simulator
+### Running SGP-Tools Online/Adaptive IPP with Gazebo/ArduRover Simulator
 
-<div style="text-align:left">
-<img width="1000" src=".assets/demo.png">
-</a></p>
-</div>
+![Image title](.assets/demo.png)
 
 Use ```docker-compose -f sitl-compose.yml exec sgptools bash``` to get a new terminal. Run the following commands in separate terminals in the docker container:
 
@@ -51,7 +51,7 @@ Use ```docker-compose -f sitl-compose.yml exec sgptools bash``` to get a new ter
     ```
     Note: Restart sim_vechile.py if you get the following message: ```paramftp: bad count 1294 should be 1284```
 
-- Launch [SGP-Tools](http://itskalvik.com/sgp-tools) Online IPP method:
+- Launch the SGP-Tools Online/Adaptive IPP method:
     ```
     ros2 launch ros_sgp_tools single_robot.launch.py
     ```
@@ -91,5 +91,6 @@ Use ```robot-compose.yml``` to build the minimal docker container.
 
 ## References
 Based on Dockerfiles from the following repos:
+
 - https://github.com/Robotic-Decision-Making-Lab/blue
 - https://github.com/ryomo/ros2-gazebo-docker
