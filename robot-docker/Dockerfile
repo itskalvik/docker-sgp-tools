@@ -8,24 +8,17 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     && apt-get clean \
     && apt-get update \
     && apt-get -y install libc-bin \
-    && apt-get -y install \
+    && apt-get install -q -y --no-install-recommends \
+    tmux nano nginx wget git \
+    python3-pip python3-dev \
     libhdf5-dev \
-    git \
-    nano \
-    python3-pip \
-    python3-dev \
-    python3-lxml \
-    python3-pygame \
-    python3-opencv \
-    python3-wxgtk4.0 \
-    python3-matplotlib \
     libgeographic-dev \
     ros-$ROS_DISTRO-cv-bridge \
     ros-$ROS_DISTRO-mavros* \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && pip3 install --no-cache-dir setuptools==58.2.0 PyYAML mavproxy
+    && pip3 install --no-cache-dir -U pip setuptools==70.0.0
 
 # Build ROS2 workspace with sgptools
 COPY ros2_ws /home/ros2_ws
@@ -37,4 +30,47 @@ RUN cd /home/ros2_ws/ \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
     && echo "source /home/ros2_ws/install/setup.sh " >> ~/.bashrc
 
-CMD ["sleep", "infinity"]
+# Setup ttyd for blueos web terminal interface
+ADD files/install-ttyd.sh /install-ttyd.sh
+RUN bash /install-ttyd.sh && rm /install-ttyd.sh
+COPY files/tmux.conf /etc/tmux.conf
+
+RUN mkdir -p /site
+COPY files/register_service /site/register_service
+COPY files/nginx.conf /etc/nginx/nginx.conf
+
+ADD files/start.sh /start.sh
+ADD files/config_swap.sh /config_swap.sh
+
+# Add docker configuration
+LABEL version="0.0.1"
+LABEL permissions='{\
+  "NetworkMode": "host",\
+  "HostConfig": {\
+    "Binds": [\
+      "/dev:/dev:rw"\
+    ],\
+    "Privileged": true,\
+    "NetworkMode": "host"\
+  }\
+}'
+LABEL authors='[\
+  {\
+    "name": "Kalvik Jakkala",\
+    "email": "itskalvik@gmail.com"\
+  }\
+]'
+LABEL company='{\
+  "about": "",\
+  "name": "ItsKalvik",\
+  "email": "itskalvik@gmail.com"\
+}'
+LABEL readme="https://raw.githubusercontent.com/itskalvik/docker-sgp-tools/master/README.md"
+LABEL type="other"
+LABEL tags='[\
+  "ros2",\
+  "robot",\
+  "Informative Path Planning"\
+]'
+
+ENTRYPOINT [ "/start.sh" ]

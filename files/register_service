@@ -1,0 +1,10 @@
+{
+    "name": "SGP-Tools",
+    "description": "SGP-Tools is a software suite for Sensor Placement and Informative Path Planning",
+    "icon": "map-marker-distance",
+    "company": "ItsKalvik",
+    "version": "0.0.1",
+    "new_page": true,
+    "webpage": "https://github.com/itskalvik/docker-sgp-tools",
+    "api": "/v1.0/docs"
+}
