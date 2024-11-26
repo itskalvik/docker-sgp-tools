@@ -16,7 +16,7 @@ swap="$(free | sed -n '3{p;q}' | sed 's/|/ /' | awk '{print $2}')"
 # Start ros_sgp_tools only if memory + swap greater than 4 GB
 # Avoids crashing BlueOS because of low memory
 if (( memory+swap >= 3906250 )); then
-    tmux send-keys -t 0 "/ros_entrypoint.sh ros2 launch ros_sgp_tools single_robot.launch.py" Enter
+    tmux send-keys -t 0 "/ros_entrypoint.sh" Enter
     tmux send-keys -t 1 "/ros_entrypoint.sh" Enter
 else
     echo "Low memory, increase swap size!"

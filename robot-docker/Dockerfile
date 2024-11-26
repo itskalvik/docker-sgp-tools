@@ -13,6 +13,7 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     python3-pip python3-dev \
     libhdf5-dev \
     libgeographic-dev \
+    ros-$ROS_DISTRO-foxglove-bridge \
     ros-$ROS_DISTRO-cv-bridge \
     ros-$ROS_DISTRO-mavros* \
     && apt-get autoremove -y \
@@ -73,4 +74,6 @@ LABEL tags='[\
   "Informative Path Planning"\
 ]'
 
+# Keep bash alive even if there is an error
+RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT [ "/start.sh" ]
