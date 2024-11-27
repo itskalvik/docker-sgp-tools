@@ -1,6 +1,16 @@
 #!/bin/bash
 
 echo "Starting.."
+
+# If memory + swap less than 4 GB, request bigger swap
+memory="$(free | sed -n '2{p;q}' | sed 's/|/ /' | awk '{print $2}')"
+swap="$(free | sed -n '3{p;q}' | sed 's/|/ /' | awk '{print $2}')"
+if (( memory+swap <= 3906250 )); then
+    cp /config_swap.sh $DATA_FOLDER
+    echo "Low memory, increase swap size!"
+    echo "Run /home/pi/config_swap.sh script on the Pi to increase the swap size"
+fi
+
 [ ! -e /var/run/nginx.pid ] && nginx&
 
 # Create a new tmux session
@@ -9,19 +19,8 @@ tmux new -d -s "SGP-Tools"
 
 # Split the screen into a 2x1 matrix
 tmux split-window -v
-
-memory="$(free | sed -n '2{p;q}' | sed 's/|/ /' | awk '{print $2}')"
-swap="$(free | sed -n '3{p;q}' | sed 's/|/ /' | awk '{print $2}')"
-
-# Start ros_sgp_tools only if memory + swap greater than 4 GB
-# Avoids crashing BlueOS because of low memory
-if (( memory+swap >= 3906250 )); then
-    tmux send-keys -t 0 "/ros_entrypoint.sh" Enter
-    tmux send-keys -t 1 "/ros_entrypoint.sh" Enter
-else
-    echo "Low memory, increase swap size!"
-    echo "Not starting informative path planner!"
-fi
+tmux send-keys -t 0 "/ros_entrypoint.sh" Enter
+tmux send-keys -t 1 "/ros_entrypoint.sh" Enter
 
 function create_service {
     tmux new -d -s "$1" || true
