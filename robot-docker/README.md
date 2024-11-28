@@ -39,7 +39,7 @@ The following shows the path planner adaptively planning paths for four robots t
 
 - Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) sensor data is supported.
 
-- The [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) must be directly connected to the flight controller. Please refer to the instruction [here](https://ardupilot.org/copter/docs/common-bluerobotics-ping.html).
+- The [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) must be directly connected to the flight controller. Please refer to the instructions [here](https://ardupilot.org/copter/docs/common-bluerobotics-ping.html).
 
 - The extension requires over 4GB of memory/swap. Please ensure that the swap size is large enough to accommodate the extension. The extension will copy a shell script (```config_swap.sh```) to the ```/home/pi/``` folder on the Raspberry Pi. You can use this script to increase the swap size before starting the path planner.
 
