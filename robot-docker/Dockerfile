@@ -68,7 +68,7 @@ LABEL company='{\
   "name": "ItsKalvik",\
   "email": "itskalvik@gmail.com"\
 }'
-LABEL readme="https://raw.githubusercontent.com/itskalvik/docker-sgp-tools/master/README.md"
+LABEL readme="https://raw.githubusercontent.com/itskalvik/docker-sgp-tools/refs/heads/main/robot-docker/README.md"
 LABEL type="other"
 LABEL tags='[\
   "ros2",\
