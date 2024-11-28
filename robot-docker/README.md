@@ -27,7 +27,7 @@ The following shows the path planner adaptively planning paths for four robots t
 
     * Please refer to the file ```/home/ros2_ws/src/ros_sgp_tools/launch/single_robot.launch.py``` in the extension's Docker container to change the number of waypoints.
 
-    * The extension also includes [Foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RVIZ](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html). You can enable it from the launch file ```single_robot.launch.py``` and access it from the [web app](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the ip address of the ASV. 
+    * The extension also includes [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html). You can enable it from the launch file ```single_robot.launch.py``` and access it from the [web app](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the ip address of the ASV. 
 
 6. After the mission, you can extract the log file from the flight controller and plot it using [UAV Log Viewer](https://plot.ardupilot.org/#/).
 
