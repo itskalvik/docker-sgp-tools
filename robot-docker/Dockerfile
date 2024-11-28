@@ -22,7 +22,7 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     && pip3 install --no-cache-dir -U pip setuptools==70.0.0
 
 # Build ROS2 workspace with sgptools
-ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/data/
+ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY ros2_ws /home/ros2_ws
 RUN cd /home/ros2_ws/ \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
@@ -51,7 +51,7 @@ LABEL permissions='{\
   "HostConfig": {\
     "Binds": [\
       "/dev:/dev:rw",\
-      "/home/pi/:/home/ros2_ws/src/ros_sgp_tools/data/:rw"\
+      "/home/pi/:/home/ros2_ws/src/ros_sgp_tools/launch/data/:rw"\
     ],\
     "Privileged": true,\
     "NetworkMode": "host"\
