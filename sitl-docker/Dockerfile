@@ -37,7 +37,7 @@ RUN sudo apt-get -q update \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/* \
-    && pip3 install --no-cache-dir -U pip setuptools==70.0.0
+    && pip3 install --no-cache-dir -U pip setuptools==70.0.0 packaging==22.0
 
 # Install Gazebo Garden: https://gazebosim.org/docs/garden/install_ubuntu
 ARG GZ_VERSION=garden
@@ -112,15 +112,14 @@ RUN sudo apt-get update \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
-ENV QT_X11_NO_MITSHM 1
+ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute QT_X11_NO_MITSHM=1
 
 # Build ROS2 workspace with sgptools
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/ \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
+    && sudo apt-get -q update \
     && sudo apt-get install -y -qq --no-install-recommends \
         ros-$ROS_DISTRO-cv-bridge \
         ros-$ROS_DISTRO-foxglove-bridge \
