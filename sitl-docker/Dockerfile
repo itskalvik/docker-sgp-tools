@@ -36,7 +36,8 @@ RUN sudo apt-get -q update \
     libgeographic-dev \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/* \
+    && pip3 install --no-cache-dir -U pip setuptools==70.0.0
 
 # Install Gazebo Garden: https://gazebosim.org/docs/garden/install_ubuntu
 ARG GZ_VERSION=garden
@@ -116,11 +117,13 @@ ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 ENV QT_X11_NO_MITSHM 1
 
 # Build ROS2 workspace with sgptools
+ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/ \
-    && python3 -m pip install --no-cache-dir packaging==22.0 \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
-    && sudo apt-get install -y -qq --no-install-recommends ros-$ROS_DISTRO-cv-bridge \
+    && sudo apt-get install -y -qq --no-install-recommends \
+        ros-$ROS_DISTRO-cv-bridge \
+        ros-$ROS_DISTRO-foxglove-bridge \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/* \
@@ -149,5 +152,7 @@ RUN sudo apt-get -q update \
     && mkdir build && cd build && cmake .. && make
 
 COPY sitl-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
+# Keep bash alive even if there is an error
+RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]
 CMD ["sleep", "infinity"]
