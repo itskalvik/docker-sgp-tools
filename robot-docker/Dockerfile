@@ -69,7 +69,7 @@ LABEL permissions='{\
   "HostConfig": {\
     "Binds": [\
       "/dev:/dev:rw",\
-      "/home/pi/:/home/ros2_ws/src/ros_sgp_tools/launch/data/:rw"\
+      "/usr/blueos/extensions/sgptools:/home/ros2_ws/src/ros_sgp_tools/launch/data/:rw"\
     ],\
     "Privileged": true,\
     "NetworkMode": "host"\
