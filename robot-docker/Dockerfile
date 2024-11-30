@@ -1,6 +1,5 @@
 ARG ROS_DISTRO=humble
 FROM ros:$ROS_DISTRO-ros-base
-
 WORKDIR /home/
 
 # Install dependent packages with apt-get and pip
@@ -22,7 +21,6 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     && pip3 install --no-cache-dir -U pip setuptools==70.0.0
 
 # Build ROS2 workspace with sgptools
-ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY ros2_ws /home/ros2_ws
 RUN cd /home/ros2_ws/ \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
@@ -41,6 +39,16 @@ RUN mkdir -p /home/ping_ws/src/ \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install \
     && echo "source /home/ping_ws/install/setup.sh " >> ~/.bashrc
+
+# Setup environment variables to configure ros_sgp_tools
+ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
+    PING2_PORT=/dev/ttyUSB0 \
+    NAMESPACE=robot_0 \
+    DATA_TYPE=Ping2 \
+    NUM_WAYPOINTS=20 \
+    SAMPLING_RATE=2 \
+    START_FOXGLOVE=True \
+    ADAPTIVE_IPP=True
 
 # Setup ttyd for blueos web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
@@ -65,7 +73,16 @@ LABEL permissions='{\
     ],\
     "Privileged": true,\
     "NetworkMode": "host"\
-  }\
+  },\
+  "Env": [\
+    PING2_PORT=/dev/ttyUSB0, \
+    NAMESPACE=robot_0, \
+    DATA_TYPE=Ping2, \
+    NUM_WAYPOINTS=20, \
+    SAMPLING_RATE=2, \
+    START_FOXGLOVE=True, \
+    ADAPTIVE_IPP=True, \
+  ]\
 }'
 LABEL authors='[\
   {\
