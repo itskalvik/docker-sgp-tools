@@ -47,7 +47,7 @@ ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     DATA_TYPE=Ping2 \
     NUM_WAYPOINTS=20 \
     SAMPLING_RATE=2 \
-    START_FOXGLOVE=True \
+    START_FOXGLOVE=False \
     ADAPTIVE_IPP=True
 
 # Setup ttyd for blueos web terminal interface
@@ -80,8 +80,8 @@ LABEL permissions='{\
     DATA_TYPE=Ping2, \
     NUM_WAYPOINTS=20, \
     SAMPLING_RATE=2, \
-    START_FOXGLOVE=True, \
-    ADAPTIVE_IPP=True, \
+    START_FOXGLOVE=False, \
+    ADAPTIVE_IPP=True \
   ]\
 }'
 LABEL authors='[\
