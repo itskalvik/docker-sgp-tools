@@ -75,13 +75,13 @@ LABEL permissions='{\
     "NetworkMode": "host"\
   },\
   "Env": [\
-    PING2_PORT=/dev/ttyUSB0, \
-    NAMESPACE=robot_0, \
-    DATA_TYPE=Ping2, \
-    NUM_WAYPOINTS=20, \
-    SAMPLING_RATE=2, \
-    START_FOXGLOVE=False, \
-    ADAPTIVE_IPP=True \
+    "PING2_PORT=/dev/ttyUSB0", \
+    "NAMESPACE=robot_0", \
+    "DATA_TYPE=Ping2", \
+    "NUM_WAYPOINTS=20", \
+    "SAMPLING_RATE=2", \
+    "START_FOXGLOVE=False", \
+    "ADAPTIVE_IPP=True" \
   ]\
 }'
 LABEL authors='[\
