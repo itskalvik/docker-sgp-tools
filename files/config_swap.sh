@@ -1,18 +1,19 @@
 #!/bin/bash
-# Bash script to increase the swap size if less than 2GB on Raspberry Pis
+# Bash script to increase the swap size if less than 4GB on a Raspberry Pi
 
 # Immediately exit on errors
 set -e
 
-# Check current swap size
-memory="$(sed -n -e 's/CONF_SWAPSIZE=//p' /etc/dphys-swapfile)"
-
-# Increase swap size if less than 2GB
-if (( memory < 2048 )); then
+# If memory + swap less than 4 GB, increase swap size
+memory="$(free | sed -n '2{p;q}' | sed 's/|/ /' | awk '{print $2}')"
+swap="$(free | sed -n '3{p;q}' | sed 's/|/ /' | awk '{print $2}')"
+if (( memory+swap <= 3906250 )); then
+    new_swap=$((3906250-memory))
+    new_swap=$((new_swap/1000))
     # Turn off current swap
     sudo dphys-swapfile swapoff
     # Increase swap to 2GB
-    sudo sed -i 's/CONF_SWAPSIZE=.*/CONF_SWAPSIZE=2048/' /etc/dphys-swapfile
+    sudo sed -i "s/CONF_SWAPSIZE=.*/CONF_SWAPSIZE=$new_swap/" /etc/dphys-swapfile
     # Apply new swap
     sudo dphys-swapfile setup
     # Re-enable swap

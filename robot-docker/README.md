@@ -29,7 +29,7 @@ The following shows the path planner adaptively planning paths for four robots t
 
     * The extension also includes [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html). You can enable it from the launch file ```single_robot.launch.py``` and access it from the [web app](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the ip address of the ASV. 
 
-6. After the mission, you can extract the log file from the flight controller and plot it using [UAV Log Viewer](https://plot.ardupilot.org/#/).
+6. Use the command ```ros2 bag record -a``` to record the robot position and sonar data during the mission. Please refer to [rosbag2](https://github.com/ros2/rosbag2) for more details. 
 
 ## Hardware Configuration:
 - This extension works only on 64-bit operating systems. You can install the latest version of [BlueOS](https://github.com/bluerobotics/BlueOS) on [64-bit Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/) by running the following command on the Pi (ensure the username is set to ```pi```):
@@ -37,11 +37,9 @@ The following shows the path planner adaptively planning paths for four robots t
     sudo su -c 'curl -fsSL https://raw.githubusercontent.com/bluerobotics/blueos-docker/master/install/install.sh | bash'
     ```
 
-- Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) sensor data is supported.
-
-- The [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) must be directly connected to the flight controller. Please refer to the instructions [here](https://ardupilot.org/copter/docs/common-bluerobotics-ping.html).
-
 - The extension requires over 4GB of memory/swap. Please ensure that the swap size is large enough to accommodate the extension. The extension will copy a shell script (```config_swap.sh```) to the ```/home/pi/``` folder on the Raspberry Pi. You can use this script to increase the swap size before starting the path planner.
+
+- Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
 
 ## Disclaimer ⚠️
 This extension, when executed properly, will take control of the ASV and could potentially collide the vehicle with obstacles in the environment. Please use it with caution.

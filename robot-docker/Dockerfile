@@ -32,6 +32,16 @@ RUN cd /home/ros2_ws/ \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
     && echo "source /home/ros2_ws/install/setup.sh " >> ~/.bashrc
 
+# Build ROS2 workspace with the ping sonar package
+RUN mkdir -p /home/ping_ws/src/ \
+    && cd /home/ping_ws/src/ \
+    && git clone https://github.com/itskalvik/ping_sonar_ros.git --recursive --depth 1 \
+    && cd /home/ping_ws/src/ping_sonar_ros/ping_sonar_ros/ping-python && python3 setup.py install --user \
+    && cd /home/ping_ws/ \
+    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && colcon build --symlink-install \
+    && echo "source /home/ping_ws/install/setup.sh " >> ~/.bashrc
+
 # Setup ttyd for blueos web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
 RUN bash /install-ttyd.sh && rm /install-ttyd.sh
