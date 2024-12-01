@@ -40,7 +40,7 @@ The following shows the path planner adaptively planning paths for four robots t
     </a></p>
     </div>
 
-4. Use the following commands in the SGP-Tools extension's terminal to record the robot position and sonar data during the mission. Please refer to [rosbag2](https://github.com/ros2/rosbag2) for more details. 
+4. Use the following commands in the terminal provided by the SGP-Tools extension to record the robot position and sonar data during the mission. Please refer to [rosbag2](https://github.com/ros2/rosbag2) for more details. 
 
     ```
     cd $DATA_FOLDER
@@ -48,19 +48,39 @@ The following shows the path planner adaptively planning paths for four robots t
     ```
 
 ## Parameters
-You can control the following extension parameters using Linux environment variables with the following command:
+You can control the following extension parameters by running the following command in the terminal provided by the SGP-Tools extension:
 
 ```
 export <parameter_name>=<parameter_value>
 ```
 
-* ```PING2_PORT``` (```default: /dev/ttyUSB0```): Specifies the device to which the Ping2 sonar is mounted. 
-* ```NUM_WAYPOINTS``` (```default: 20```): The number of waypoints optimized by the path planner. Increasing the number of waypoints gives a more complex path which potentally covers a larger area but also requires more compute and could result in slower online path updates. 
-* ```SAMPLING_RATE``` (```default: 2```): The number of points to sample along each edge of the path during path planning. Increasing the samping rate results in the planner being aware of the data being collected along the whole path instead of assuming that the data is collected only at the vertices. This method requires relatively less compute then increasing the number of waypints, but still adds to the overall compute cost.
-* ```START_FOXGLOVE``` (```default: False```): Enables [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html). You can access it from the [web app](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the ip address of the ASV.
-* ```ADAPTIVE_IPP``` (```default: True```): Enables adaptive IPP, which uses the data streaming from the sonar to learn the correlations in the underwater bathymetry and further optimizes the future waypoints to maximize collecting new informative data.
-* ```NAMESPACE``` (```default: robot_0```): ROS2 namespace, useful when multiple ROS2 robots are operating on the same network.
-* ```DATA_TYPE``` (```default: Ping2```): Type of sensor to be used by the path planner. Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
+* ```PING2_PORT``` (```default: /dev/ttyUSB0```): 
+
+    Specifies the device to which the Ping2 sonar is mounted. 
+
+* ```NUM_WAYPOINTS``` (```default: 20```): 
+
+    The number of waypoints optimized by the path planner. Increasing the number of waypoints gives a more complex path which potentally covers a larger area but also requires more compute and could result in slower online path updates. 
+
+* ```SAMPLING_RATE``` (```default: 2```): 
+    
+    The number of points to sample along each edge of the path during path planning. Increasing the samping rate results in the planner being aware of the data being collected along the whole path instead of assuming that the data is collected only at the vertices. This method requires relatively less compute then increasing the number of waypints, but still adds to the overall compute cost.
+
+* ```START_FOXGLOVE``` (```default: False```): 
+
+    Enables [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html). You can access it from the [web app](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the ip address of the ASV.
+
+* ```ADAPTIVE_IPP``` (```default: True```): 
+
+    Enables adaptive IPP, which uses the data streaming from the sonar to learn the correlations in the underwater bathymetry and further optimizes the future waypoints to maximize collecting new informative data.
+    
+* ```NAMESPACE``` (```default: robot_0```): 
+    
+    ROS2 namespace, useful when multiple ROS2 robots are operating on the same network.
+
+* ```DATA_TYPE``` (```default: Ping2```): 
+
+    Type of sensor to be used by the path planner. Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
 
 ## Hardware Configuration:
 - This extension works only on 64-bit operating systems. You can install the latest version of [BlueOS](https://github.com/bluerobotics/BlueOS) on [64-bit Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/) by running the following command on the Pi (ensure the username is set to ```pi```):
