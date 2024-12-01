@@ -8,7 +8,7 @@ swap="$(free | sed -n '3{p;q}' | sed 's/|/ /' | awk '{print $2}')"
 if (( memory+swap <= 3906250 )); then
     cp /config_swap.sh $DATA_FOLDER
     echo "Low memory, increase swap size!"
-    echo "Run /home/pi/config_swap.sh script on the Pi to increase the swap size"
+    echo "Run /usr/blueos/extensions/sgptools/config_swap.sh script on the Pi to increase the swap size"
 fi
 
 [ ! -e /var/run/nginx.pid ] && nginx&
