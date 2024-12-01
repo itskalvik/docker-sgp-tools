@@ -48,7 +48,11 @@ The following shows the path planner adaptively planning paths for four robots t
     ```
 
 ## Parameters
-You can control the following extension parameters using environment variables that can be configured from the BlueOS's extensions panel
+You can control the following extension parameters using Linux environment variables with the following command:
+
+```
+export <parameter_name>=<parameter_value>
+```
 
 * ```PING2_PORT``` (```default: /dev/ttyUSB0```): Specifies the device to which the Ping2 sonar is mounted. 
 * ```NUM_WAYPOINTS``` (```default: 20```): The number of waypoints optimized by the path planner. Increasing the number of waypoints gives a more complex path which potentally covers a larger area but also requires more compute and could result in slower online path updates. 
