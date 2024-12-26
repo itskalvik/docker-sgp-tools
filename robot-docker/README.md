@@ -49,6 +49,11 @@ The following shows the path planner adaptively planning paths for four robots t
 
     The above command will publish a point cloud that can be viewed using [foxglove](https://foxglove.dev/product). You can access it from a web browser at [https://app.foxglove.dev/](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the IP address of the ASV.
 
+    <div style="text-align:left">
+    <img width="472" src="../.assets/data_viz.gif">
+    </a></p>
+    </div>
+
     Optionally, you can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
 
     ```
