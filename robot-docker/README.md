@@ -40,11 +40,19 @@ The following shows the path planner adaptively planning paths for four robots t
     </a></p>
     </div>
 
-4. Use the following commands in the terminal provided by the SGP-Tools extension to record the robot position and sonar data during the mission. Please refer to [rosbag2](https://github.com/ros2/rosbag2) for more details. 
+4. The sensor data, along with the corresponding GPS coordinates, will be logged to an [HDF5](https://docs.h5py.org/en/stable/) file in the ```DATA_FOLDER```, where the ```mission.plan``` was uploaded. 
+
+    We can estimate the bathymetry of the entire survey area using the collected data and visualize it with the following command (⚠️ Do not run this during the mission, as it could disrupt the path planner):
+    ```
+    ros2 launch ros_sgp_tools visualize_data.launch.py
+    ```
+
+    The above command will publish a point cloud that can be viewed using [foxglove](https://foxglove.dev/product). You can access it from a web browser at [https://app.foxglove.dev/](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the IP address of the ASV.
+
+    Optionally, you can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
 
     ```
-    cd $DATA_FOLDER
-    ros2 bag record -a
+    ros2 launch ros_sgp_tools visualize_data.launch.py mission_log:=<log folder name>
     ```
 
 ## Parameters
@@ -68,7 +76,7 @@ export <parameter_name>=<parameter_value>
 
 * ```START_FOXGLOVE``` (```default: False```): 
 
-    Enables [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html). You can access it from the [web app](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the ip address of the ASV.
+    Enables [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html).
 
 * ```ADAPTIVE_IPP``` (```default: True```): 
 
@@ -82,7 +90,7 @@ export <parameter_name>=<parameter_value>
 
     Type of sensor to be used by the path planner. Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
 
-## Hardware Configuration:
+## Hardware Configuration
 - This extension works only on 64-bit operating systems. You can install the latest version of [BlueOS](https://github.com/bluerobotics/BlueOS) on [64-bit Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/) by running the following command on the Pi (ensure the username is set to ```pi```):
     ```
     sudo su -c 'curl -fsSL https://raw.githubusercontent.com/bluerobotics/blueos-docker/master/install/install.sh | bash'
