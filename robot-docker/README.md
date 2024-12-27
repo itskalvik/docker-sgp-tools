@@ -42,7 +42,7 @@ The following shows the path planner adaptively planning paths for four robots t
 
 4. The sensor data, along with the corresponding GPS coordinates, will be logged to an [HDF5](https://docs.h5py.org/en/stable/) file in the ```DATA_FOLDER```, where the ```mission.plan``` was uploaded. 
 
-    We can estimate the bathymetry of the entire survey area using the collected data and visualize it with the following command (⚠️ Do not run this during the mission, as it could disrupt the path planner):
+    We can estimate the bathymetry of the entire survey area using the collected data and visualize a normalized version with the following command (⚠️ Do not run this during the mission, as it could disrupt the path planner):
     ```
     ros2 launch ros_sgp_tools visualize_data.launch.py
     ```
