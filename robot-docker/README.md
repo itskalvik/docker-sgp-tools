@@ -54,6 +54,8 @@ The following shows the path planner adaptively planning paths for four robots t
     </a></p>
     </div>
 
+    You can control the point cloud density using the ```num_samples``` parameter. You can set this either from the sgptools terminal or from foxglove's ```Parameters``` panel.
+
     Optionally, you can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
 
     ```
