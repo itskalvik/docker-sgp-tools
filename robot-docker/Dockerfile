@@ -83,7 +83,7 @@ LABEL permissions='{\
     "ADAPTIVE_IPP=True", \
     "NAMESPACE=robot_0", \
     "DATA_TYPE=Ping2", \
-    "FAKE_DATA=False"
+    "FAKE_DATA=False" \
   ]\
 }'
 LABEL authors='[\
