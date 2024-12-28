@@ -42,7 +42,7 @@ The following shows the path planner adaptively planning paths for four robots t
 
 4. The sensor data, along with the corresponding GPS coordinates, will be logged to an [HDF5](https://docs.h5py.org/en/stable/) file in the ```DATA_FOLDER```, where the ```mission.plan``` was uploaded. 
 
-    We can estimate the bathymetry of the entire survey area using the collected data and visualize a normalized version with the following command (⚠️ Do not run this during the mission, as it could disrupt the path planner):
+    We can estimate the bathymetry of the entire survey area using the collected data and visualize a normalized version with the following command (⚠️ Do not run this during the mission, as it will disrupt the path planner):
     ```
     ros2 launch ros_sgp_tools visualize_data.launch.py
     ```
@@ -54,9 +54,9 @@ The following shows the path planner adaptively planning paths for four robots t
     </a></p>
     </div>
 
-    You can control the point cloud density using the ```num_samples``` parameter. You can set this either from the sgptools terminal or from foxglove's ```Parameters``` panel.
+    You can control the point cloud density using the ```num_samples``` parameter. You can set this from foxglove's ```Parameters``` panel.
 
-    Optionally, you can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
+    By default, the latest mission log will be visualized. You can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
 
     ```
     ros2 launch ros_sgp_tools visualize_data.launch.py mission_log:=<log folder name>
@@ -68,6 +68,10 @@ You can control the following extension parameters by running the following comm
 ```
 export <parameter_name>=<parameter_value>
 ```
+
+The parameters reset to their default values after rebooting. They can be made permanent by configuring the parameters using the app environment variables on the BlueOS extensions page in pirate mode.
+
+#### Available Parameters: 
 
 * ```PING2_PORT``` (```default: /dev/ttyUSB0```): 
 
@@ -96,6 +100,10 @@ export <parameter_name>=<parameter_value>
 * ```DATA_TYPE``` (```default: Ping2```): 
 
     Type of sensor to be used by the path planner. Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
+
+* ```FAKE_DATA``` (```default: False```):
+
+    Enables a fake sensor data publisher used for testing. Requires ```DATA_TYPE=SerialPing2```.
 
 ## Hardware Configuration
 - This extension works only on 64-bit operating systems. You can install the latest version of [BlueOS](https://github.com/bluerobotics/BlueOS) on [64-bit Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/) by running the following command on the Pi (ensure the username is set to ```pi```):
