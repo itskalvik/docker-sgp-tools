@@ -91,6 +91,10 @@ The parameters reset to their default values after rebooting. They can be made p
     
     The number of points to sample along each edge of the path during path planning. Increasing the samping rate results in the planner being aware of the data being collected along the whole path instead of assuming that the data is collected only at the vertices. This method requires relatively less compute then increasing the number of waypints, but still adds to the overall compute cost.
 
+* ```DATA_BUFFER_SIZE``` (```default: 100```):
+
+    The number of sensor data samples to collect before using the data to update the model parameters, which, in turn, will be used to update future waypoints, maximizing the amount of new information that can be collected by leveraging the rate of change in the sensor data.
+
 * ```START_FOXGLOVE``` (```default: False```): 
 
     Enables [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html).
