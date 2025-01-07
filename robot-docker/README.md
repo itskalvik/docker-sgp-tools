@@ -1,11 +1,12 @@
 # [BlueOS SGP-Tools](https://www.itskalvik.com/sgp-tools/blueos.html)
-A BlueOS Extension for Autonomous Bathymetric Surveys
 
 <div style="text-align:left">
-<p><a href="http://itskalvik.com/sgp-tools">
+<p><a href="https://www.itskalvik.com/sgp-tools/blueos.html">
 <img width="472" src="../.assets/blueos_sgptools.png">
 </a></p>
 </div>
+
+### A BlueOS Extension for Autonomous Approximate Bathymetric Surveys
 
 ## What Does It Do?
 Autonomous Surface Vehicles (ASVs), such as the [BlueRobotics BlueBoat](https://bluerobotics.com/store/boat/blueboat/blueboat/), are well-suited for bathymetric surveys. However, it is often the case that an exhaustive survey mapping the depth at every location in an area is infeasible or unnecessary. In such cases, we can leverage variations in the underwater terrain to determine a few critical locations for data collection, which would result in a good approximation of the area's bathymetry.
@@ -51,27 +52,29 @@ The following shows the underwater terrain estimated using data collected by our
     </div>
 
 ### Viewing the Data after a Mission
-1. The sensor data, along with the corresponding GPS coordinates, will be logged to an [HDF5](https://docs.h5py.org/en/stable/) file in the ```DATA_FOLDER```, where the ```mission.plan``` was uploaded. 
+The sensor data, along with the corresponding GPS coordinates, will be logged to an [HDF5](https://docs.h5py.org/en/stable/) file in the ```DATA_FOLDER```, where the ```mission.plan``` was uploaded. 
 
-    We can estimate the bathymetry of the entire survey area using the collected data and visualize a normalized version with the following command (⚠️ Do not run this during the mission, as it will disrupt the path planner):
-    ```
-    ros2 launch ros_sgp_tools visualize_data.launch.py
-    ```
+We can estimate the bathymetry of the entire survey area using the collected data and visualize a normalized version with the following command:
 
-    The above command will publish a point cloud that can be viewed using [foxglove](https://foxglove.dev/product). You can access it from a web browser at [https://app.foxglove.dev/](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the IP address of the ASV.
+⚠️ Do not run this during the mission, as it will disrupt the path planner
+```
+ros2 launch ros_sgp_tools visualize_data.launch.py
+```
 
-    <div style="text-align:left">
-    <img width="472" src="../.assets/data_viz.gif">
-    </a></p>
-    </div>
+The above command will publish a point cloud that can be viewed using [foxglove](https://foxglove.dev/product). You can access it from a web browser at [https://app.foxglove.dev/](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the IP address of the ASV.
 
-    You can control the point cloud density using the ```num_samples``` parameter. You can set this from foxglove's ```Parameters``` panel.
+<div style="text-align:left">
+<img width="472" src="../.assets/data_viz.gif">
+</a></p>
+</div>
 
-    By default, the latest mission log will be visualized. You can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
+You can control the point cloud density using the ```num_samples``` parameter. You can set this from foxglove's ```Parameters``` panel.
 
-    ```
-    ros2 launch ros_sgp_tools visualize_data.launch.py mission_log:=<log folder name>
-    ```
+By default, the latest mission log will be visualized. You can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
+
+```
+ros2 launch ros_sgp_tools visualize_data.launch.py mission_log:=<log folder name>
+```
 
 ## Parameters
 You can control the following extension parameters by running the following command in the terminal provided by the SGP-Tools extension:
