@@ -1,11 +1,12 @@
 # [BlueOS SGP-Tools](https://www.itskalvik.com/sgp-tools/blueos.html)
-#### A BlueOS Extension for Autonomous Bathymetric Surveys
 
 <div style="text-align:left">
-<p><a href="http://itskalvik.com/sgp-tools">
+<p><a href="https://www.itskalvik.com/sgp-tools/blueos.html">
 <img width="472" src="../.assets/blueos_sgptools.png">
 </a></p>
 </div>
+
+### A BlueOS Extension for Autonomous Approximate Bathymetric Surveys
 
 ## What Does It Do?
 Autonomous Surface Vehicles (ASVs), such as the [BlueRobotics BlueBoat](https://bluerobotics.com/store/boat/blueboat/blueboat/), are well-suited for bathymetric surveys. However, it is often the case that an exhaustive survey mapping the depth at every location in an area is infeasible or unnecessary. In such cases, we can leverage variations in the underwater terrain to determine a few critical locations for data collection, which would result in a good approximation of the area's bathymetry.
