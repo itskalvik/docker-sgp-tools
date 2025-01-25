@@ -12,9 +12,6 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     python3-pip python3-dev \
     libhdf5-dev \
     libgeographic-dev \
-    ros-$ROS_DISTRO-foxglove-bridge \
-    ros-$ROS_DISTRO-cv-bridge \
-    ros-$ROS_DISTRO-mavros* \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
@@ -25,6 +22,9 @@ COPY ros2_ws /home/ros2_ws
 RUN cd /home/ros2_ws/ \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && apt-get update \
+    && rosdep install --from-paths src --ignore-src -y \
+    && rm -rf /var/lib/apt/lists/* \
     && colcon build --symlink-install \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
@@ -48,7 +48,6 @@ ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     NUM_WAYPOINTS=20 \
     SAMPLING_RATE=2 \
     DATA_BUFFER_SIZE=100 \
-    START_FOXGLOVE=False \
     ADAPTIVE_IPP=True \
     FAKE_DATA=False
 
@@ -81,7 +80,6 @@ LABEL permissions='{\
     "NUM_WAYPOINTS=20", \
     "SAMPLING_RATE=2", \
     "DATA_BUFFER_SIZE=100", \
-    "START_FOXGLOVE=False", \
     "ADAPTIVE_IPP=True", \
     "NAMESPACE=robot_0", \
     "DATA_TYPE=Ping2", \

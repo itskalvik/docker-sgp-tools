@@ -25,16 +25,14 @@ The following shows the underwater terrain estimated using data collected by our
 
 
 ## Setup
-- This extension works only on 64-bit operating systems. You can install the latest version of [BlueOS](https://github.com/bluerobotics/BlueOS) on [64-bit Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/) by running the following command on the Pi (ensure the username is set to ```pi```):
-    ```
-    sudo su -c 'curl -fsSL https://raw.githubusercontent.com/bluerobotics/blueos-docker/master/install/install.sh | bash'
-    ```
+- This extension works only on 64-bit version of [BlueOS](https://github.com/bluerobotics/BlueOS). You can get the 64-bit image of BlueOS for Raspberry Pi from [here](https://github.com/bluerobotics/BlueOS/releases/download/1.4.0-beta.10/BlueOS-raspberry-linux-arm64-v8-bookworm.zip).
 
 - The extension requires over 4GB of memory+swap. Please ensure that the swap size is large enough to accommodate the extension. The extension will copy the shell script ```config_swap.sh``` to ```/usr/blueos/extensions/sgptools/``` folder on the underlying device. You can use this script to increase the swap size before starting the path planner. 
 
     You will have to use [```Pirate Mode```](https://blueos.cloud/docs/1.0/usage/advanced/) to access BlueOS's built-in terminal and run the script on the underlying device via the ```red-pill``` utility. Use the following commands to enable ```red-pill``` and increase the swap size: 
     ```
     red-pill
+
     sudo bash /usr/blueos/extensions/sgptools/config_swap.sh
     ```
 
@@ -134,10 +132,6 @@ The parameters reset to their default values after rebooting. They can be made p
     - The number of inducing points used in the parameter model (sparse Gaussian process).
     - Increasing the number of inducing points will result in more accurate parameter estimates and more informative paths.
     - Recommend enabling only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
-
-* ```START_FOXGLOVE``` (```default: False```): 
-    - Enables [foxglove](https://foxglove.dev/product), a web-based data visualization platform similar to [RViz](https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html).
-    - Currently it does not publish any new information that is not available through Cockpit or QGC.
 
 * ```ADAPTIVE_IPP``` (```default: True```):
     - Enables adaptive informative path planning.
