@@ -1,3 +1,6 @@
 [submodule "ros2_ws/src/ros_sgp_tools"]
 	path = ros2_ws/src/ros_sgp_tools
 	url = https://github.com/itskalvik/ros_sgp_tools
+[submodule "ros2_ws/src/mavros_control"]
+	path = ros2_ws/src/mavros_control
+	url = https://github.com/itskalvik/mavros_control
