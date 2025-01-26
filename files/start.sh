@@ -17,8 +17,8 @@ fi
 tmux -f /etc/tmux.conf start-server
 tmux new -d -s "SGP-Tools"
 
-# Split the screen into a 2x1 matrix
-tmux send-keys -t 0 "/ros_entrypoint.sh && cd /home/ros2_ws/ && colcon build --symlink-install" Enter
+# Re-build ros_sgp_tools to ensure the lastest mission.plan file is used
+tmux send-keys "/ros_entrypoint.sh && cd /home/ros2_ws/ && colcon build --symlink-install" Enter
 
 function create_service {
     tmux new -d -s "$1" || true
