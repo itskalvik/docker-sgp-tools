@@ -30,9 +30,11 @@ The following shows the underwater terrain estimated using data collected by our
 - The extension requires over 4GB of memory+swap. Please ensure that the swap size is large enough to accommodate the extension. The extension will copy the shell script ```config_swap.sh``` to ```/usr/blueos/extensions/sgptools/``` folder on the underlying device. You can use this script to increase the swap size before starting the path planner. 
 
     You will have to use [```Pirate Mode```](https://blueos.cloud/docs/1.0/usage/advanced/) to access BlueOS's built-in terminal and run the script on the underlying device via the ```red-pill``` utility. Use the following commands to enable ```red-pill``` and increase the swap size: 
+    
     ```
     red-pill
     ```
+    
     ```
     sudo bash /usr/blueos/extensions/sgptools/config_swap.sh
     ```
