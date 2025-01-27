@@ -32,7 +32,8 @@ The following shows the underwater terrain estimated using data collected by our
     You will have to use [```Pirate Mode```](https://blueos.cloud/docs/1.0/usage/advanced/) to access BlueOS's built-in terminal and run the script on the underlying device via the ```red-pill``` utility. Use the following commands to enable ```red-pill``` and increase the swap size: 
     ```
     red-pill
-
+    ```
+    ```
     sudo bash /usr/blueos/extensions/sgptools/config_swap.sh
     ```
 
@@ -149,5 +150,8 @@ The parameters reset to their default values after rebooting. They can be made p
 * ```FAKE_DATA``` (```default: False```):
     - Enables a fake sensor data publisher used only for testing. Requires ```DATA_TYPE=SerialPing2```.
 
+* ```FCU_URL``` (```default: tcp://0.0.0.0:5777@```):
+    - URL of the flight controller. This should only be changed if running the package on a non-BlueOS platform.
+    
 ## Disclaimer ⚠️
 This extension, when executed properly, will take control of the ASV and could potentially collide the vehicle with obstacles in the environment. Please use it with caution.
