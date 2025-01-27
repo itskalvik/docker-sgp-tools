@@ -49,7 +49,8 @@ ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     SAMPLING_RATE=2 \
     DATA_BUFFER_SIZE=100 \
     ADAPTIVE_IPP=True \
-    FAKE_DATA=False
+    FAKE_DATA=False \
+    FCU_URL=tcp://0.0.0.0:5777@
 
 # Setup ttyd for blueos web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
@@ -83,7 +84,8 @@ LABEL permissions='{\
     "ADAPTIVE_IPP=True", \
     "NAMESPACE=robot_0", \
     "DATA_TYPE=Ping2", \
-    "FAKE_DATA=False" \
+    "FAKE_DATA=False", \
+    "FCU_URL=tcp://0.0.0.0:5777@" \
   ]\
 }'
 LABEL authors='[\
