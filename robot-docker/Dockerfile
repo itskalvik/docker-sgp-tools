@@ -29,7 +29,7 @@ RUN cd /home/ros2_ws/ \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
     && echo "source /home/ros2_ws/install/setup.sh " >> ~/.bashrc \
-    && echo "PYTHONWARNINGS='ignore:setup.py install is deprecated::setuptools.command.install'; export PYTHONWARNINGS" >> ~/.bashrc
+    && echo "PYTHONWARNINGS='ignore'; export PYTHONWARNINGS" >> ~/.bashrc
 
 # Build ROS2 workspace with the ping sonar package
 RUN mkdir -p /home/ping_ws/src/ \
