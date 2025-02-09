@@ -5,7 +5,7 @@
 </div>
 
 # docker-sgp-tools
-The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package provides the following docker-compose scripts:
+The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package provides the following docker compose scripts:
 
 * ```robot-compose.yml```: A minimal docker container used to run [SGP-Tools](http://itskalvik.com/sgp-tools) [ROS2 package](https://github.com/itskalvik/ros_sgp_tools) on ArduPilot-based robots.
 * ```sitl-compose.yml```: A GUI-based docker container with ROS2, Gazebo, ArduPilot SITL, and [SGP-Tools](http://itskalvik.com/sgp-tools) used for simulating ArduPilot vehicles and testing SGP-Tools IPP code. 
@@ -15,7 +15,7 @@ The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package pr
 ### Prerequisites
 
 * [docker](https://docs.docker.com/engine/install/)
-* [docker-compose](https://docs.docker.com/compose/install/)
+* [docker compose](https://docs.docker.com/compose/install/)
 * (Optional) [WSLg](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps)
 
 ## Getting Started 
@@ -26,9 +26,9 @@ Run the following commands to start the SITL docker container:
 ```bash
 git clone --recurse-submodules https://github.com/itskalvik/docker-sgp-tools.git
 cd docker-sgp-tools
-docker-compose -f sitl-compose.yml pull
-docker-compose -f sitl-compose.yml up -d
-docker-compose -f sitl-compose.yml exec sgptools bash
+docker compose -f sitl-compose.yml pull
+docker compose -f sitl-compose.yml up -d
+docker compose -f sitl-compose.yml exec sgptools bash
 ```
 
 Use ```robot-compose.yml``` to run the minimal docker container. 
@@ -37,7 +37,7 @@ Use ```robot-compose.yml``` to run the minimal docker container.
 
 ![Image title](.assets/demo.png)
 
-Use ```docker-compose -f sitl-compose.yml exec sgptools bash``` to get a new terminal. Run the following commands in separate terminals in the docker container:
+Use ```docker compose -f sitl-compose.yml exec sgptools bash``` to get a new terminal. Run the following commands in separate terminals in the docker container:
 
 - Launch Gazebo with the [AION R1 UGV](https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/AionR1.md):
     ```
@@ -70,23 +70,23 @@ Next, clone the repo and build the container.
 ```bash
 git clone --recurse-submodules https://github.com/itskalvik/docker-sgp-tools.git
 cd docker-sgp-tools
-docker-compose -f sitl-compose.yml build 
+docker compose -f sitl-compose.yml build 
 ```
 
 Use ```robot-compose.yml``` to build the minimal docker container.
 
 ## Other commands
 
-- The docker-compose down command stops and removes containers, networks, volumes, and images, making it suitable for completely clearing all resources deployed by an application.
+- The docker compose down command stops and removes containers, networks, volumes, and images, making it suitable for completely clearing all resources deployed by an application.
 
     ```bash
-    docker-compose -f sitl-compose.yml down
+    docker compose -f sitl-compose.yml down
     ```
 
-- The docker-compose stop command just pauses running containers without removing them, which is ideal for temporary halts.
+- The docker compose stop command just pauses running containers without removing them, which is ideal for temporary halts.
 
     ```bash
-    docker-compose -f sitl-compose.yml stop
+    docker compose -f sitl-compose.yml stop
     ```
 
 ## References
