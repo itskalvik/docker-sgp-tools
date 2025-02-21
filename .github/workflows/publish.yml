@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push robot container
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           push: true
           files: ./robot-compose.yml
@@ -78,9 +78,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: "Fix QEMU libc issue"
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes -c yes
       -
         name: Build and push sitl container
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v6
         with:
           push: true
           files: ./sitl-compose.yml
