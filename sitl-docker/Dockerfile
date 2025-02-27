@@ -118,10 +118,12 @@ ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compu
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/ \
-    && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
+&& python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
+&& python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && sudo apt-get -q update \
     && sudo apt-get install -y -qq --no-install-recommends \
         ros-$ROS_DISTRO-cv-bridge \
+        ros-$ROS_DISTRO-tf-transformations \
         ros-$ROS_DISTRO-foxglove-bridge \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
