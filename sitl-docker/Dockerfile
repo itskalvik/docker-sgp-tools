@@ -93,9 +93,7 @@ RUN cd /home/$USERNAME/ \
     && mkdir build \
     && cd build \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    && make -j4 \
-    && cd /home/$USERNAME/ \
-    && git clone https://github.com/ArduPilot/SITL_Models.git --depth 1
+    && make -j4
 
 # Install NVIDIA software
 RUN sudo apt-get update \

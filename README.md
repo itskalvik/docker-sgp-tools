@@ -16,6 +16,7 @@ The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package pr
 
 * [docker](https://docs.docker.com/engine/install/)
 * [docker compose](https://docs.docker.com/compose/install/)
+* (Optional) [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 * (Optional) [WSLg](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps)
 
 ## Getting Started 
@@ -37,11 +38,13 @@ Use ```robot-compose.yml``` to run the minimal docker container.
 
 ![Image title](.assets/demo.png)
 
+Note: The Gazebo-based simulator requires an Nvidia GPU for reliable performance.  
+
 Use ```docker compose -f sitl-compose.yml exec sgptools bash``` to get a new terminal. Run the following commands in separate terminals in the docker container:
 
 - Launch Gazebo with the Blue Robotics BlueBoat ASV:
     ```
-    gz sim -v4 -r blueboat.world
+    gz sim -v4 -r blueboat_waves.sdf
     ```
 
 - Launch [ArduPilot SITL](https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html):

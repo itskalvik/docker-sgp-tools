@@ -8,8 +8,6 @@ $HOME/ardupilot_gazebo/build
 export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:\
 $HOME/ardupilot_gazebo/models:\
 $HOME/ardupilot_gazebo/worlds:\
-$HOME/SITL_Models/Gazebo/models:\
-$HOME/SITL_Models/Gazebo/worlds:\
 $HOME/gz_ws/src/asv_wave_sim/gz-waves-models/models:\
 $HOME/gz_ws/src/asv_wave_sim/gz-waves-models/world_models:\
 $HOME/gz_ws/src/asv_wave_sim/gz-waves-models/worlds:\
