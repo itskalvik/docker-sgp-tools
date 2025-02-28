@@ -123,6 +123,8 @@ RUN cd /home/$USERNAME/ros2_ws/ \
         ros-$ROS_DISTRO-cv-bridge \
         ros-$ROS_DISTRO-tf-transformations \
         ros-$ROS_DISTRO-foxglove-bridge \
+        ros-$ROS_DISTRO-ros-gz-sim \
+        ros-$ROS_DISTRO-ros-gz-bridge \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/* \
