@@ -39,19 +39,19 @@ Use ```robot-compose.yml``` to run the minimal docker container.
 
 Use ```docker compose -f sitl-compose.yml exec sgptools bash``` to get a new terminal. Run the following commands in separate terminals in the docker container:
 
-- Launch Gazebo with the [AION R1 UGV](https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/AionR1.md):
+- Launch Gazebo with the Blue Robotics BlueBoat ASV:
     ```
-    gz sim -v4 -r r1_rover_runway.sdf
+    gz sim -v4 -r blueboat.world
     ```
-    To simulate a BlueBoat refer to this [documentation](https://github.com/ArduPilot/SITL_Models/blob/master/Gazebo/docs/BlueBoat.md). Note that the container already has Wave Sim installed in it.
 
-- Launch [ArduRover SITL](https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html):
+- Launch [ArduPilot SITL](https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html):
     ```
-    sim_vehicle.py -v Rover -f rover-skid --model JSON --add-param-file=$HOME/SITL_Models/Gazebo/config/r1_rover.param --console --map -N -l 35.30371178789218,-80.73099267294185,0.,0.
+    sim_vehicle.py -v Rover -f rover-skid --model JSON --console --map -N -l 35.30371178789218,-80.73099267294185,0.,0.
+
     ```
     Note: Restart sim_vechile.py if you get the following message: ```paramftp: bad count 1294 should be 1284```
 
-- Launch the SGP-Tools Online/Adaptive IPP method:
+- Once `AHRS` and `GPS` are green in `MAVProxy Console` launch the SGP-Tools Online/Adaptive IPP method:
     ```
     ros2 launch ros_sgp_tools single_robot.launch.py
     ```

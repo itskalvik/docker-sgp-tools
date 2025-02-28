@@ -12,7 +12,9 @@ $HOME/SITL_Models/Gazebo/models:\
 $HOME/SITL_Models/Gazebo/worlds:\
 $HOME/gz_ws/src/asv_wave_sim/gz-waves-models/models:\
 $HOME/gz_ws/src/asv_wave_sim/gz-waves-models/world_models:\
-$HOME/gz_ws/src/asv_wave_sim/gz-waves-models/worlds
+$HOME/gz_ws/src/asv_wave_sim/gz-waves-models/worlds:\
+$HOME/ros2_ws/src/ros_sgp_tools/models:\
+$HOME/ros2_ws/src/ros_sgp_tools/worlds
 
 # ensure the system plugins are found
 export GZ_SIM_SYSTEM_PLUGIN_PATH=$GZ_SIM_SYSTEM_PLUGIN_PATH:\
