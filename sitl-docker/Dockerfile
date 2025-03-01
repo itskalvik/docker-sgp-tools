@@ -136,14 +136,12 @@ RUN sudo apt-get -q update \
 # Build ROS2 workspace with sgptools
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
-RUN cd /home/$USERNAME/ros2_ws/ \
-&& python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
-&& python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
+RUN cd /home/$USERNAME/ros2_ws/src \
+    && python3 -m pip install --no-cache-dir -r mavros_control/requirements.txt \
+    && python3 -m pip install --no-cache-dir -r ros_sgp_tools/requirements.txt \
+    && cd /home/$USERNAME/ros2_ws \
     && sudo apt-get -q update \
-    && sudo apt-get install -y -qq --no-install-recommends \
-        ros-$ROS_DISTRO-cv-bridge \
-        ros-$ROS_DISTRO-tf-transformations \
-        ros-$ROS_DISTRO-foxglove-bridge \
+    && sudo rosdep install -r --from-paths src -i -y --rosdistro $ROS_DISTRO \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/* \

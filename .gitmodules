@@ -4,3 +4,6 @@
 [submodule "ros2_ws/src/mavros_control"]
 	path = ros2_ws/src/mavros_control
 	url = https://github.com/itskalvik/mavros_control
+[submodule "ros2_ws/src/message_filters"]
+	path = ros2_ws/src/message_filters
+	url = https://github.com/itskalvik/message_filters.git
