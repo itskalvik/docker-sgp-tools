@@ -112,6 +112,27 @@ RUN sudo apt-get update \
 # Env vars for the nvidia-container-runtime.
 ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute QT_X11_NO_MITSHM=1
 
+# Build Wave Sim
+RUN sudo apt-get -q update \
+    && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && mkdir -p /home/$USERNAME/gz_ws/src \
+    && cd /home/$USERNAME/gz_ws/src \
+    && git clone https://github.com/srmainwaring/asv_wave_sim.git --depth 1 \
+    && git clone https://github.com/gazebosim/ros_gz.git -b $ROS_DISTRO --depth 1 \
+    && cd /home/$USERNAME/gz_ws/ \
+    && rosdep update \
+    && sudo rosdep install -r --from-paths src/ros_gz -i -y --rosdistro $ROS_DISTRO \
+    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && colcon build --symlink-install --merge-install --cmake-args \
+                    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                    -DBUILD_TESTING=ON \
+                    -DCMAKE_CXX_STANDARD=17 \
+    && echo "source /home/${USERNAME}/gz_ws/install/setup.sh " >> /home/$USERNAME/.bashrc \
+    && cd /home/$USERNAME/gz_ws/src/asv_wave_sim/gz-waves/src/gui/plugins/waves_control \
+    && mkdir build && cd build && cmake .. && make
+    
 # Build ROS2 workspace with sgptools
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
@@ -123,8 +144,6 @@ RUN cd /home/$USERNAME/ros2_ws/ \
         ros-$ROS_DISTRO-cv-bridge \
         ros-$ROS_DISTRO-tf-transformations \
         ros-$ROS_DISTRO-foxglove-bridge \
-        ros-$ROS_DISTRO-ros-gz-sim \
-        ros-$ROS_DISTRO-ros-gz-bridge \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/* \
@@ -132,25 +151,6 @@ RUN cd /home/$USERNAME/ros2_ws/ \
     && colcon build --symlink-install \
     && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
     && echo "source /home/${USERNAME}/ros2_ws/install/setup.sh " >> /home/$USERNAME/.bashrc
-
-# Build Wave Sim
-RUN sudo apt-get -q update \
-    && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
-    && sudo apt-get autoremove -y \
-    && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /home/$USERNAME/gz_ws/src \
-    && cd /home/$USERNAME/gz_ws/src \
-    && git clone https://github.com/srmainwaring/asv_wave_sim.git --depth 1 \
-    && cd /home/$USERNAME/gz_ws/ \
-    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
-    && colcon build --symlink-install --merge-install --cmake-args \
-                    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                    -DBUILD_TESTING=ON \
-                    -DCMAKE_CXX_STANDARD=17 \
-    && echo "source /home/${USERNAME}/gz_ws/install/setup.sh " >> /home/$USERNAME/.bashrc \
-    && cd /home/$USERNAME/gz_ws/src/asv_wave_sim/gz-waves/src/gui/plugins/waves_control \
-    && mkdir build && cd build && cmake .. && make
 
 COPY sitl-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 # Keep bash alive even if there is an error
