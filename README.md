@@ -49,7 +49,7 @@ Use ```docker compose -f sitl-compose.yml exec sgptools bash``` to get a new ter
 
 - Launch [ArduPilot SITL](https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html):
     ```
-    sim_vehicle.py -v Rover -f rover-skid --model JSON --console --map -N -l 35.30371178789218,-80.73099267294185,0.,0.
+    sim_vehicle.py -v Rover -f rover-skid --model JSON --console --map -N -L RATBeach
 
     ```
     Note: Restart sim_vechile.py if you get the following message: ```paramftp: bad count 1294 should be 1284```
