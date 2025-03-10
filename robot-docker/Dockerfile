@@ -20,10 +20,13 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
 # Build ROS2 workspace with sgptools
 COPY ros2_ws /home/ros2_ws
 RUN cd /home/ros2_ws/ \
+    && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
     && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && apt-get update \
-    && rosdep install --from-paths src --ignore-src -y \
+    && rosdep install --from-paths src --ignore-src -y --rosdistro $ROS_DISTRO \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && colcon build --symlink-install \
     && ros2 run mavros install_geographiclib_datasets.sh \
@@ -42,16 +45,18 @@ RUN mkdir -p /home/ping_ws/src/ \
     && echo "source /home/ping_ws/install/setup.sh " >> ~/.bashrc
 
 # Setup environment variables to configure ros_sgp_tools
-ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
-    PING2_PORT=/dev/ttyUSB0 \
-    NAMESPACE=robot_0 \
+ENV NAMESPACE=robot_0 \
     DATA_TYPE=Ping2 \
     NUM_WAYPOINTS=20 \
     SAMPLING_RATE=2 \
-    DATA_BUFFER_SIZE=100 \
+    DATA_BUFFER_SIZE=200 \
+    TRAIN_PARAM_INDUCING=False \
+    NUM_PARAM_INDUCING=40 \
     ADAPTIVE_IPP=True \
-    FAKE_DATA=False \
-    FCU_URL=tcp://0.0.0.0:5777@
+    DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
+    FCU_URL=tcp://0.0.0.0:5777@ \
+    PING2_PORT=/dev/ttyUSB0 \
+    KERNEL=RBF
 
 # Setup ttyd for blueos web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
@@ -78,15 +83,18 @@ LABEL permissions='{\
     "NetworkMode": "host"\
   },\
   "Env": [\
-    "PING2_PORT=/dev/ttyUSB0", \
-    "NUM_WAYPOINTS=20", \
-    "SAMPLING_RATE=2", \
-    "DATA_BUFFER_SIZE=100", \
-    "ADAPTIVE_IPP=True", \
     "NAMESPACE=robot_0", \
     "DATA_TYPE=Ping2", \
-    "FAKE_DATA=False", \
-    "FCU_URL=tcp://0.0.0.0:5777@" \
+    "NUM_WAYPOINTS=20", \
+    "SAMPLING_RATE=2", \
+    "DATA_BUFFER_SIZE=200", \
+    "TRAIN_PARAM_INDUCING=False", \
+    "NUM_PARAM_INDUCING=40", \
+    "ADAPTIVE_IPP=True", \
+    "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/"," \
+    "FCU_URL=tcp://0.0.0.0:5777@"," \
+    "PING2_PORT=/dev/ttyUSB0", \
+    "KERNEL=RBF" \
   ]\
 }'
 LABEL authors='[\
