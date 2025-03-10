@@ -12,6 +12,7 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     python3-pip python3-dev \
     libhdf5-dev \
     libgeographic-dev \
+    build-essential \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
