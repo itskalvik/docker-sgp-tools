@@ -92,8 +92,8 @@ LABEL permissions='{\
     "TRAIN_PARAM_INDUCING=False", \
     "NUM_PARAM_INDUCING=40", \
     "ADAPTIVE_IPP=True", \
-    "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/"," \
-    "FCU_URL=tcp://0.0.0.0:5777@"," \
+    "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/", \
+    "FCU_URL=tcp://0.0.0.0:5777@", \
     "PING2_PORT=/dev/ttyUSB0", \
     "KERNEL=RBF" \
   ]\
