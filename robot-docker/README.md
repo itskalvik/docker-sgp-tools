@@ -121,6 +121,11 @@ The parameters reset to their default values after rebooting. They can be made p
     - The path planner assumes the data is collected only at the sampled points. Increasing the sampling rate allows the planner to better approximate the information along the entire path, thereby resulting in more informative paths.
     - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
 
+* ```KERNEL``` (```default: RBF```): 
+    - The kernel function used in the IPP approach for online IPP updates. Currently available options: `RBF`, `Attentive`, and `Neural`
+    - The default `RBF` stationary kernel function is fast enough to run on a Raspberry Pi 4. The non-stationary kernel functions `Attentive` and `Neural` can result in more informative paths but require more computational power.
+    - Recommend using a non-stationary kernel only when running BlueOS on a high-performance SoC, such as the Nvidia Jetson platform.
+
 * ```DATA_BUFFER_SIZE``` (```default: 100```):
     - The number of sensor data samples to collect before using the data to update the model parameters, which, in turn, will be used to update future waypoints.
     - Increasing the buffer size will allow the planner to compute better parameter estimates, which will result in more informative paths.
@@ -148,9 +153,6 @@ The parameters reset to their default values after rebooting. They can be made p
 * ```DATA_TYPE``` (```default: Ping2```): 
     - Type of sensor to be used by the path planner. 
     - Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
-
-* ```FAKE_DATA``` (```default: False```):
-    - Enables a fake sensor data publisher used only for testing. Requires ```DATA_TYPE=SerialPing2```.
 
 * ```FCU_URL``` (```default: tcp://0.0.0.0:5777@```):
     - URL of the flight controller. This should only be changed if running the package on a non-BlueOS platform.
