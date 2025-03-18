@@ -55,9 +55,10 @@ ENV NAMESPACE=robot_0 \
     NUM_PARAM_INDUCING=40 \
     ADAPTIVE_IPP=True \
     DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
-    FCU_URL=tcp://0.0.0.0:5777@ \
+    FCU_URL=/dev/ttyACM0:57600 \
     PING1D_PORT=/dev/ttyUSB0 \
-    KERNEL=RBF
+    KERNEL=RBF \
+    ROS_LOG_DIR=/home/ros2_ws/src/ros_sgp_tools/launch/data/
 
 # Setup ttyd for blueos web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
@@ -95,7 +96,8 @@ LABEL permissions='{\
     "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/", \
     "FCU_URL=tcp://0.0.0.0:5777@", \
     "PING1D_PORT=/dev/ttyUSB0", \
-    "KERNEL=RBF" \
+    "KERNEL=RBF", \
+    "ROS_LOG_DIR=/home/ros2_ws/src/ros_sgp_tools/launch/data/" \
   ]\
 }'
 LABEL authors='[\
