@@ -111,8 +111,8 @@ The parameters reset to their default values after rebooting. They can be made p
 
 ### Available Parameters: 
 
-* ```PING2_PORT``` (```default: /dev/ttyUSB0```):
-    - Specifies the device to which the Ping2 sonar is mounted. You can get the device port from the ```Ping Sonar Devices``` page in BlueOS.
+* ```PING1D_PORT``` (```default: /dev/ttyUSB0```):
+    - Specifies the device to which the Ping1D sonar is mounted. You can get the device port from the ```Ping Sonar Devices``` page in BlueOS.
 
 * ```NUM_WAYPOINTS``` (```default: 20```):
     - The number of waypoints optimized by the path planner.

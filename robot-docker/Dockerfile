@@ -56,7 +56,7 @@ ENV NAMESPACE=robot_0 \
     ADAPTIVE_IPP=True \
     DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     FCU_URL=tcp://0.0.0.0:5777@ \
-    PING_1D_PORT=/dev/ttyUSB0 \
+    PING1D_PORT=/dev/ttyUSB0 \
     KERNEL=RBF
 
 # Setup ttyd for blueos web terminal interface
@@ -94,7 +94,7 @@ LABEL permissions='{\
     "ADAPTIVE_IPP=True", \
     "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/", \
     "FCU_URL=tcp://0.0.0.0:5777@", \
-    "PING_1D_PORT=/dev/ttyUSB0", \
+    "PING1D_PORT=/dev/ttyUSB0", \
     "KERNEL=RBF" \
   ]\
 }'
