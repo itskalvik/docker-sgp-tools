@@ -7,7 +7,7 @@
 # docker-sgp-tools
 The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package provides the following docker compose scripts:
 
-* ```robot-compose.yml```: A minimal docker container used to run [SGP-Tools](http://itskalvik.com/sgp-tools) [ROS2 package](https://github.com/itskalvik/ros_sgp_tools) on ArduPilot-based robots.
+* ```robot-compose.yml```: A minimal docker container used to run [SGP-Tools](http://itskalvik.com/sgp-tools) [ROS2 package](https://github.com/itskalvik/ros_sgp_tools) on ArduPilot-based robots and as an extension on [BlueOS](https://www.itskalvik.com/sgp-tools/blueos.html).
 * ```sitl-compose.yml```: A GUI-based docker container with ROS2, Gazebo, ArduPilot SITL, and [SGP-Tools](http://itskalvik.com/sgp-tools) used for simulating ArduPilot vehicles and testing SGP-Tools IPP code. 
 
 ![Image title](.assets/docker_ros2_ardupilot.png)
@@ -16,8 +16,7 @@ The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package pr
 
 * [docker](https://docs.docker.com/engine/install/)
 * [docker compose](https://docs.docker.com/compose/install/)
-* (Optional) [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-* (Optional) [WSLg](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps)
+* [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 
 ## Getting Started 
 ### Starting the Containers

@@ -25,7 +25,7 @@ The following shows the underwater terrain estimated using data collected by our
 
 
 ## Setup
-- This extension works only on 64-bit version of [BlueOS](https://github.com/bluerobotics/BlueOS). You can get the 64-bit image of BlueOS for Raspberry Pi from [here](https://github.com/bluerobotics/BlueOS/releases/download/1.4.0-beta.10/BlueOS-raspberry-linux-arm64-v8-bookworm.zip).
+- This extension works only on 64-bit version of [BlueOS](https://github.com/bluerobotics/BlueOS). You can get the 64-bit image of BlueOS for Raspberry Pi from [here](https://github.com/bluerobotics/BlueOS/releases/download/1.4.0-beta.17/BlueOS-raspberry-linux-arm64-v8-bookworm-pi5.zip).
 
 - The extension requires over 4GB of memory+swap. Please ensure that the swap size is large enough to accommodate the extension. The extension will copy the shell script ```config_swap.sh``` to ```/usr/blueos/extensions/sgptools/``` folder on the underlying device. You can use this script to increase the swap size before starting the path planner. 
 
@@ -97,6 +97,9 @@ By default, the latest mission log will be visualized. You can visualize a speci
 ros2 launch ros_sgp_tools visualize_data.launch.py mission_log:=<log folder name>
 ```
 
+### Simulator
+You can test your mission or develop new algorithms in our companion ROS2/Gazebo [simulator](https://www.itskalvik.com/sgp-tools/docker.html)
+
 ## Parameters
 You can control the following extension parameters by running the following command in the terminal provided by the SGP-Tools extension:
 
@@ -150,13 +153,13 @@ The parameters reset to their default values after rebooting. They can be made p
     - ROS2 namespace, useful when multiple ROS2 robots are operating on the same network.
     - Currently, only the single robot planner is fully supported.
     
-* ```DATA_TYPE``` (```default: Ping2```): 
+* ```DATA_TYPE``` (```default: Ping1D```): 
     - Type of sensor to be used by the path planner. 
     - Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
 
 * ```FCU_URL``` (```default: tcp://0.0.0.0:5777@```):
     - URL of the flight controller. This should only be changed if running the package on a non-BlueOS platform.
-    
+
 ## Disclaimer ⚠️
 This extension, when executed properly, will take control of the ASV and could potentially collide the vehicle with obstacles in the environment. Please use it with caution.
 
