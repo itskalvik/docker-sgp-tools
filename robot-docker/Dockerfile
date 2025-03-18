@@ -47,7 +47,7 @@ RUN mkdir -p /home/ping_ws/src/ \
 
 # Setup environment variables to configure ros_sgp_tools
 ENV NAMESPACE=robot_0 \
-    DATA_TYPE=Ping2 \
+    DATA_TYPE=Ping1D \
     NUM_WAYPOINTS=20 \
     SAMPLING_RATE=2 \
     DATA_BUFFER_SIZE=200 \
@@ -56,7 +56,7 @@ ENV NAMESPACE=robot_0 \
     ADAPTIVE_IPP=True \
     DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     FCU_URL=tcp://0.0.0.0:5777@ \
-    PING2_PORT=/dev/ttyUSB0 \
+    PING_1D_PORT=/dev/ttyUSB0 \
     KERNEL=RBF
 
 # Setup ttyd for blueos web terminal interface
@@ -85,7 +85,7 @@ LABEL permissions='{\
   },\
   "Env": [\
     "NAMESPACE=robot_0", \
-    "DATA_TYPE=Ping2", \
+    "DATA_TYPE=Ping1D", \
     "NUM_WAYPOINTS=20", \
     "SAMPLING_RATE=2", \
     "DATA_BUFFER_SIZE=200", \
@@ -94,7 +94,7 @@ LABEL permissions='{\
     "ADAPTIVE_IPP=True", \
     "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/", \
     "FCU_URL=tcp://0.0.0.0:5777@", \
-    "PING2_PORT=/dev/ttyUSB0", \
+    "PING_1D_PORT=/dev/ttyUSB0", \
     "KERNEL=RBF" \
   ]\
 }'
