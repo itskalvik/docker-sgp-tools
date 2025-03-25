@@ -6,7 +6,7 @@ services:
       context: ./
       platforms:
           - "linux/amd64"
-      dockerfile: sitl-docker/Dockerfile
+      dockerfile: sim-docker/Dockerfile
       args:
         - ROS_DISTRO=humble
         - GZ_VERSION=garden

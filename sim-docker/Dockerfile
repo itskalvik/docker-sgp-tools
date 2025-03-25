@@ -150,7 +150,7 @@ RUN cd /home/$USERNAME/ros2_ws/src \
     && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
     && echo "source /home/${USERNAME}/ros2_ws/install/setup.sh " >> /home/$USERNAME/.bashrc
 
-COPY sitl-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
+COPY sim-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 # Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]
