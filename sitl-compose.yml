@@ -1,6 +1,6 @@
 services:
   sgptools:
-    image: itskalvik/sgp-tools:sitl-humble-garden
+    image: itskalvik/sgp-tools:simulator
     runtime: nvidia
     build:
       context: ./
