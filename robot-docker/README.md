@@ -129,7 +129,7 @@ The parameters reset to their default values after rebooting. They can be made p
     - The default `RBF` stationary kernel function is fast enough to run on a Raspberry Pi 4. The non-stationary kernel functions `Attentive` and `Neural` can result in more informative paths but require more computational power.
     - Recommend using a non-stationary kernel only when running BlueOS on a high-performance SoC, such as the Nvidia Jetson platform.
 
-* ```DATA_BUFFER_SIZE``` (```default: 100```):
+* ```DATA_BUFFER_SIZE``` (```default: 200```):
     - The number of sensor data samples to collect before using the data to update the model parameters, which, in turn, will be used to update future waypoints.
     - Increasing the buffer size will allow the planner to compute better parameter estimates, which will result in more informative paths.
     - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
