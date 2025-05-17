@@ -125,8 +125,9 @@ The parameters reset to their default values after rebooting. They can be made p
     - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
 
 * ```KERNEL``` (```default: RBF```): 
-    - The kernel function used in the IPP approach for online IPP updates. Currently available options: `RBF`, `Attentive`, and `Neural`
+    - The kernel function used in the IPP approach for online IPP updates. Currently available options: `RBF`, `Attentive`, `Neural`, and `None`
     - The default `RBF` stationary kernel function is fast enough to run on a Raspberry Pi 4. The non-stationary kernel functions `Attentive` and `Neural` can result in more informative paths but require more computational power.
+    - When `None`, the survey mission path from the mission.plan file is used. This requires you to include a survey mission defined within the geofence. Note that the survey mission should not include any explicitly defined waypoints. 
     - Recommend using a non-stationary kernel only when running BlueOS on a high-performance SoC, such as the Nvidia Jetson platform.
 
 * ```DATA_BUFFER_SIZE``` (```default: 200```):
