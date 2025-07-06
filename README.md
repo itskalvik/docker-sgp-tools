@@ -57,7 +57,7 @@ Use ```docker compose -f sim-compose.yml exec sgptools bash``` to get a new term
 
 - Launch the [SGP-Tools](http://itskalvik.com/sgp-tools) Online/Adaptive IPP method:
     ```
-    ros2 launch ros_sgp_tools single_robot.launch.py
+    ros2 launch ros_sgp_tools asv.launch.py
     ```
 
 ## Building the Docker Containers from Scratch
