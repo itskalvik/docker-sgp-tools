@@ -152,6 +152,8 @@ RUN cd /home/$USERNAME/ros2_ws/src \
     && echo "source /home/${USERNAME}/ros2_ws/install/setup.sh " >> /home/$USERNAME/.bashrc
 
 COPY sim-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
+RUN ln -s "/home/${USERNAME}/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml" "/home/${USERNAME}/config.yaml"
+
 # Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]

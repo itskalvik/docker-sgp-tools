@@ -99,6 +99,8 @@ LABEL tags='[\
   "Informative Path Planning"\
 ]'
 
+RUN ln -s "/home/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml" "/home/config.yaml"
+
 # Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT [ "/start.sh" ]
