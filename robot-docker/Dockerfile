@@ -46,18 +46,8 @@ RUN mkdir -p /home/ping_ws/src/ \
     && echo "source /home/ping_ws/install/setup.sh " >> ~/.bashrc
 
 # Setup environment variables to configure ros_sgp_tools
-ENV NAMESPACE=robot_0 \
-    DATA_TYPE=Ping1D \
-    NUM_WAYPOINTS=20 \
-    SAMPLING_RATE=2 \
-    DATA_BUFFER_SIZE=200 \
-    TRAIN_PARAM_INDUCING=False \
-    NUM_PARAM_INDUCING=40 \
-    ADAPTIVE_IPP=True \
-    DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
+ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     FCU_URL=/dev/ttyACM0:57600 \
-    PING1D_PORT=/dev/ttyUSB0 \
-    KERNEL=RBF \
     ROS_LOG_DIR=/home/ros2_ws/src/ros_sgp_tools/launch/data/logs/
 
 # Setup ttyd for blueos web terminal interface
@@ -73,7 +63,7 @@ ADD files/start.sh /start.sh
 ADD files/config_swap.sh /config_swap.sh
 
 # Add docker configuration
-LABEL version="0.0.1"
+LABEL version="0.0.2"
 LABEL permissions='{\
   "NetworkMode": "host",\
   "HostConfig": {\
@@ -85,18 +75,8 @@ LABEL permissions='{\
     "NetworkMode": "host"\
   },\
   "Env": [\
-    "NAMESPACE=robot_0", \
-    "DATA_TYPE=Ping1D", \
-    "NUM_WAYPOINTS=20", \
-    "SAMPLING_RATE=2", \
-    "DATA_BUFFER_SIZE=200", \
-    "TRAIN_PARAM_INDUCING=False", \
-    "NUM_PARAM_INDUCING=40", \
-    "ADAPTIVE_IPP=True", \
     "DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/", \
     "FCU_URL=tcp://0.0.0.0:5777@", \
-    "PING1D_PORT=/dev/ttyUSB0", \
-    "KERNEL=RBF", \
     "ROS_LOG_DIR=/home/ros2_ws/src/ros_sgp_tools/launch/data/logs/" \
   ]\
 }'

@@ -137,6 +137,7 @@ RUN sudo apt-get -q update \
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/src \
+    && python3 -m pip install --no-cache-dir -U pip setuptools==70.0.0 packaging==22.0 \
     && python3 -m pip install --no-cache-dir -r mavros_control/requirements.txt \
     && python3 -m pip install --no-cache-dir -r ros_sgp_tools/requirements.txt \
     && cd /home/$USERNAME/ros2_ws \
