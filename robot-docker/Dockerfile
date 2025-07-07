@@ -48,7 +48,8 @@ RUN mkdir -p /home/ping_ws/src/ \
 # Setup environment variables to configure ros_sgp_tools
 ENV DATA_FOLDER=/home/ros2_ws/src/ros_sgp_tools/launch/data/ \
     FCU_URL=/dev/ttyACM0:57600 \
-    ROS_LOG_DIR=/home/ros2_ws/src/ros_sgp_tools/launch/data/logs/
+    ROS_LOG_DIR=/home/ros2_ws/src/ros_sgp_tools/launch/data/logs/ \
+    RCUTILS_COLORIZED_OUTPUT=1
 
 # Setup ttyd for blueos web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
