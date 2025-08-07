@@ -1,6 +1,6 @@
 services:
   sgptools:
-    image: itskalvik/sgp-tools:0.0.1
+    image: itskalvik/sgp-tools:beta
     build:
       context: ./
       platforms:
@@ -24,9 +24,14 @@ services:
       - TERM=xterm-256color
 
     volumes:
-      - ./ros2_ws/src:/home/ros2_ws/src
+      - ./ros2_ws/src:/root/ros2_ws/src
       - /dev:/dev
       - /var/run/dbus:/var/run/dbus
 
-    network_mode: host
+    ports:
+      - "4717:4717"
+
+    #network_mode: host
     privileged: true
+    tty: true
+    stdin_open: true
