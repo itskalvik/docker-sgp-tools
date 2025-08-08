@@ -8,7 +8,7 @@
 
 **docker-sgp-tools** provides ready-to-use [Docker Compose](https://docs.docker.com/compose/) files and Dockerfiles for running [SGP-Tools](https://sgp-tools.com/) and its [ROS2](https://github.com/itskalvik/ros_sgp_tools) companion package in two main scenarios:
 
-- **Simulation**: Full-stack GUI container (Gazebo, ArduPilot SITL, ROS2, Foxglove, SGP-Tools)
+- **Simulation**: Full-stack GUI container (Gazebo, ArduPilot SITL, ROS2, Foxglove, SGP-Tools).
 - **Robot/Edge/BlueOS**: Minimal ROS2/SGP-Tools container, usable directly on a robot or as a [BlueOS](https://bluerobotics.com/blueos-conversion/) extension.
 
 ## Containers & Compose Files
