@@ -1,7 +1,8 @@
 <p align="center">
-<a href="https://sgp-tools.com/">
-<img src=".assets/SGP-Tools.png" width="75%"/> 
-</a></p>
+  <img src=".assets/SGP-Tools.png#gh-light-mode-only" alt="SGP-Tools Logo" width="600"/>
+  <img src=".assets/logo_dark.png#gh-dark-mode-only" alt="SGP-Tools Logo" width="600"/>
+</p>
+
 
 # docker-sgp-tools
 
