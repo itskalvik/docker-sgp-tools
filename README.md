@@ -1,100 +1,133 @@
-<div style="text-align:left">
-<p><a href="http://itskalvik.com/sgp-tools">
-<img width="472" src=".assets/SGP-Tools.png">
+<p align="center">
+<a href="https://sgp-tools.com/">
+<img src=".assets/SGP-Tools.png" width="75%"/> 
 </a></p>
-</div>
 
 # docker-sgp-tools
-The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) package provides the following docker compose scripts:
 
-* ```robot-compose.yml```: A minimal docker container used to run [SGP-Tools](http://itskalvik.com/sgp-tools) [ROS2 package](https://github.com/itskalvik/ros_sgp_tools) on ArduPilot-based robots and as an extension on [BlueOS](https://www.itskalvik.com/sgp-tools/blueos.html).
-* ```sim-compose.yml```: A GUI-based docker container with ROS2, Gazebo, ArduPilot SITL, and [SGP-Tools](http://itskalvik.com/sgp-tools) used for simulating ArduPilot vehicles and testing SGP-Tools IPP code. 
+**docker-sgp-tools** provides ready-to-use [Docker Compose](https://docs.docker.com/compose/) files and Dockerfiles for running [SGP-Tools](https://sgp-tools.com/) and its [ROS2](https://github.com/itskalvik/ros_sgp_tools) companion package in two main scenarios:
 
-![Image title](.assets/docker_ros2_ardupilot.png)
+- **Simulation**: Full-stack GUI container (Gazebo, ArduPilot SITL, ROS2, Foxglove, SGP-Tools)
+- **Robot/Edge/BlueOS**: Minimal ROS2/SGP-Tools container, usable directly on a robot or as a [BlueOS](https://bluerobotics.com/blueos-conversion/) extension.
+
+## Containers & Compose Files
+| Compose File          | Use Case            | Features                                                                                 |
+|-----------------------|---------------------|------------------------------------------------------------------------------------------|
+| `sim-compose.yml`     | Simulation/Dev      | GUI, ROS2, Gazebo, ArduPilot SITL, SGP-Tools, Foxglove. Requires Nvidia GPU.             |
+| `robot-compose.yml`   | Robot/Production    | Minimal ROS2/SGP-Tools. Runs on robot or deployable as a BlueOS extension.  |
 
 ### Prerequisites
 
-* [docker](https://docs.docker.com/engine/install/)
-* [docker compose](https://docs.docker.com/compose/install/)
-* [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+- [Docker Engine](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) (for GPU support in simulation)
+- **Optional for multi-arch builds**: [Buildx](https://docs.docker.com/buildx/working-with-buildx/)
 
 ## Getting Started 
-### Starting the Containers
 
-Run the following commands to start the SITL docker container:
+### 1. Clone this repository
 
 ```bash
 git clone --recurse-submodules https://github.com/itskalvik/docker-sgp-tools.git
 cd docker-sgp-tools
+```
+
+### 2. Pull and Run the Simulation Container
+
+```bash
 docker compose -f sim-compose.yml pull
 docker compose -f sim-compose.yml up -d
 docker compose -f sim-compose.yml exec sgptools bash
 ```
 
-Use ```robot-compose.yml``` to run the minimal docker container. 
+#### To stop or clean up:
 
-### Running SGP-Tools Online/Adaptive IPP with Gazebo/ArduRover Simulator
+```bash
+docker compose -f sim-compose.yml stop    # stop containers, keep data/volumes
+docker compose -f sim-compose.yml down    # stop and remove containers/volumes/networks/images
+```
+
+### 3. Run the Minimal Robot Container
+For **robot deployment** onboard a custom ASV:
+
+```bash
+docker compose -f robot-compose.yml up -d
+docker compose -f robot-compose.yml exec sgptools-robot bash
+```
+
+* The `robot-compose.yml` file can be customized for device paths, data log locations, and environment variables as needed.
+
+* See the [BlueOS SGP-Tools README](./robot-docker/README.md) for step-by-step instructions on deploying as a BlueOS extension on a Blue Robotics Blue Boat.
+
+## Simulation Workflow Example
 
 ![Image title](.assets/demo.png)
 
-Note: The Gazebo-based simulator requires an Nvidia GPU for reliable performance.  
 
-Use ```docker compose -f sim-compose.yml exec sgptools bash``` to get a new terminal. Run the following commands in separate terminals in the docker container:
+### 1. Launch Gazebo simulation with BlueBoat ASV:
 
-- Launch Gazebo with the [Blue Robotics BlueBoat ASV](https://bluerobotics.com/store/boat/blueboat/blueboat/):
-    ```
-    gz sim -v4 -r blueboat_waves.sdf
-    ```
+```
+gz sim -v4 -r blueboat_waves.sdf
+```
 
-- Launch [ArduPilot SITL](https://ardupilot.org/dev/docs/sitl-simulator-software-in-the-loop.html):
-    ```
-    sim_vehicle.py -v Rover -f rover-skid --model JSON --console --map -N -L RATBeach
-    ```
-    Note: 
-    - Ensure the MAV Console shows `AHRS` and `GPS` in green before running the next command
-    - Ensure the MAV Map shows the vehicle before running the next command
-    - Restart sim_vechile.py if you get the following message: ```paramftp: bad count```
+#### 2. Start ArduPilot SITL (inside container):
 
-- Launch the [SGP-Tools](http://itskalvik.com/sgp-tools) Online/Adaptive IPP method:
-    ```
-    ros2 launch ros_sgp_tools asv.launch.py
-    ```
+```
+sim_vehicle.py -v Rover -f rover-skid --model JSON --console --map -N -L RATBeach
+```
 
-## Building the Docker Containers from Scratch
+* Wait for `AHRS` and `GPS` to turn green in MAVProxy.
 
-First, setup buildx to build the containers for both arm64 and amd64 platforms: 
+* If errors (`paramftp: bad count`), restart sim_vehicle.py.
+
+#### 3. Launch SGP-Tools planner:
+
+```
+ros2 launch ros_sgp_tools asv.launch.py
+```
+
+#### 4. (Optional) Visualize in Foxglove:
+
+* Open Foxglove web (https://app.foxglove.dev/)
+* Connect to ROS2 bridge at `ws://localhost:8765`
+
+## About the Images
+
+* **Simulation container:**
+
+    * Ubuntu, ROS2 Humble, Gazebo, MAVProxy, ArduPilot SITL, Foxglove bridge, SGP-Tools, all required plugins and environment scripts.
+
+    * Includes ros_entrypoint_sitl.sh to automatically set up Gazebo/ArduPilot/ROS2 plugin paths on container start.
+
+    * NVIDIA GPU required for Gazebo reliability.
+
+* **Robot container:**
+
+    * Lightweight image: ROS2, SGP-Tools, minimal ROS2 nodes, sensor drivers.
+
+    * Designed for ARM64 and AMD64 targets (supports BlueOS and bare-metal robot computers).
+
+## Building from Scratch (Multi-Arch)
+
+To build containers for both ARM64 and AMD64:
+
 ```bash
-docker buildx create --name multi-arch \
-  --platform "linux/arm64,linux/amd64" \
-  --driver "docker-container"
+docker buildx create --name multi-arch --platform "linux/arm64,linux/amd64" --driver "docker-container"
 docker buildx use multi-arch
+
+docker compose -f sim-compose.yml build
+# or
+docker compose -f robot-compose.yml build
+
 ```
 
-Next, clone the repo and build the container. 
-```bash
-git clone --recurse-submodules https://github.com/itskalvik/docker-sgp-tools.git
-cd docker-sgp-tools
-docker compose -f sim-compose.yml build 
-```
+## Robot/BlueOS Extension
 
-Use ```robot-compose.yml``` to build the minimal docker container.
+* The **robot container** can be deployed as a BlueOS extension on compatible vehicles (e.g., BlueRobotics BlueBoat).
 
-## Other commands
-
-- The docker compose down command stops and removes containers, networks, volumes, and images, making it suitable for completely clearing all resources deployed by an application.
-
-    ```bash
-    docker compose -f sim-compose.yml down
-    ```
-
-- The docker compose stop command just pauses running containers without removing them, which is ideal for temporary halts.
-
-    ```bash
-    docker compose -f sim-compose.yml stop
-    ```
+* **See the** [BlueOS SGP-Tools README](./robot-docker/README.md) for detailed instructions, swap size configuration, file upload, and mission launch procedures.
 
 ## References
-Based on Dockerfiles from the following repos:
-
-- https://github.com/Robotic-Decision-Making-Lab/blue
-- https://github.com/ryomo/ros2-gazebo-docker
+- Based on Dockerfiles from:
+    - https://github.com/Robotic-Decision-Making-Lab/blue
+    - https://github.com/ryomo/ros2-gazebo-docker
