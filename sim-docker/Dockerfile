@@ -36,8 +36,7 @@ RUN sudo apt-get -q update \
     libgeographic-dev \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/* \
-    && pip3 install --no-cache-dir -U pip setuptools==70.0.0 packaging==22.0
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # Install Gazebo Garden: https://gazebosim.org/docs/garden/install_ubuntu
 ARG GZ_VERSION=garden
@@ -114,6 +113,7 @@ ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compu
 
 # Build Wave Sim
 RUN sudo apt-get -q update \
+    && python3 -m pip install --no-cache-dir -U pip setuptools packaging -U \
     && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
@@ -132,12 +132,32 @@ RUN sudo apt-get -q update \
     && echo "source /home/${USERNAME}/gz_ws/install/setup.sh " >> /home/$USERNAME/.bashrc \
     && cd /home/$USERNAME/gz_ws/src/asv_wave_sim/gz-waves/src/gui/plugins/waves_control \
     && mkdir build && cd build && cmake .. && make
-    
+
+# Install ping-python from source (Newer commits don't seem to work with the ping1d)
+RUN cd /home/$USERNAME/ \
+    && git clone https://github.com/bluerobotics/ping-python.git -b deployment \
+    && cd ping-python \
+    && git checkout 3d41ddd \
+    && python3 setup.py install --user
+
+# Build ROS2 workspace with the ping sonar package
+RUN mkdir -p /home/$USERNAME/ping_ws/src/ \
+    && cd /home/$USERNAME/ping_ws/ \
+    && python3 -m pip install --no-cache-dir -U pip setuptools==79.0.1 \
+    && git clone https://github.com/itskalvik/bluerobotics_sonar.git --depth 1 /home/$USERNAME/ping_ws/src \
+    && sudo apt-get update \
+    && rosdep install --from-paths src --ignore-src -r -y \
+    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && colcon build --symlink-install \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/* \
+    && echo "source /home/$USERNAME/ping_ws/install/setup.sh " >> ~/.bashrc
+
 # Build ROS2 workspace with sgptools
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
 COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
 RUN cd /home/$USERNAME/ros2_ws/src \
-    && python3 -m pip install --no-cache-dir -U pip setuptools==70.0.0 packaging==22.0 \
     && python3 -m pip install --no-cache-dir -r mavros_control/requirements.txt \
     && python3 -m pip install --no-cache-dir -r ros_sgp_tools/requirements.txt \
     && cd /home/$USERNAME/ros2_ws \
