@@ -74,6 +74,10 @@ RUN mkdir -p /site
 COPY files/register_service /site/register_service
 COPY files/start.sh /start.sh
 
+# Backup ros_sgp_tools config files
+RUN mkdir -p /root/.config_files/ \
+    && cp -r /root/ros2_ws/src/ros_sgp_tools/launch/data/* /root/.config_files/
+
 # Add docker configuration
 LABEL version="0.0.2"
 LABEL permissions='{\

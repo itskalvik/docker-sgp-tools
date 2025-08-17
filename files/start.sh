@@ -10,6 +10,31 @@ if (( memory+swap <= 3906250 )); then
     echo "Run /usr/blueos/extensions/sgptools/config_swap.sh script on the Pi to increase the swap size"
 fi
 
+# Copy ros_sgp_tools configuration files if they do not exist
+FILE="root/ros2_ws/src/ros_sgp_tools/launch/data/mission.plan"
+if [ ! -f "$FILE" ]; then
+    cp /root/.config_files/mission.plan /root/ros2_ws/src/ros_sgp_tools/launch/data/mission.plan
+    echo "Copied mission.plan to /root/ros2_ws/src/ros_sgp_tools/launch/data/"
+else
+    echo "mission.plan already exists"
+fi
+
+FILE="root/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml"
+if [ ! -f "$FILE" ]; then
+    cp /root/.config_files/config.yaml /root/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml
+    echo "Copied config.yaml to /root/ros2_ws/src/ros_sgp_tools/launch/data/"
+else
+    echo "config.yaml already exists"
+fi
+
+FILE="root/ros2_ws/src/ros_sgp_tools/launch/data/viz_config.yaml"
+if [ ! -f "$FILE" ]; then
+    cp /root/.config_files/viz_config.yaml /root/ros2_ws/src/ros_sgp_tools/launch/data/viz_config.yaml
+    echo "Copied viz_config.yaml to /root/ros2_ws/src/ros_sgp_tools/launch/data/"
+else
+    echo "viz_config.yaml already exists"
+fi
+
 # Create necessary directories for nginx
 mkdir -p /var/log/nginx
 mkdir -p /var/run
