@@ -87,9 +87,7 @@ LABEL permissions='{\
       "/usr/blueos/extensions/sgptools/:/root/ros2_ws/src/ros_sgp_tools/launch/data/:rw"\
     ],\
     "Privileged": true,\
-    "NetworkMode": "host",\
-    "CpuQuota": 200000,\
-    "CpuPeriod": 100000,\
+    "NetworkMode": "host"\
   },\
   "Env": [\
     "DATA_FOLDER=/root/ros2_ws/src/ros_sgp_tools/launch/data/", \
