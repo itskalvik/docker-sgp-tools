@@ -29,7 +29,7 @@ RUN cd /root/ros2_ws/ \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && colcon build --symlink-install \
+    && colcon build --symlink-install --cmake-args -DCMAKE_VERBOSE_MAKEFILE=ON \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
     && echo "source /root/ros2_ws/install/setup.sh " >> ~/.bashrc \
