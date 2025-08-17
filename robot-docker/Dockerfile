@@ -74,9 +74,6 @@ RUN mkdir -p /site
 COPY files/register_service /site/register_service
 COPY files/start.sh /start.sh
 
-# Copy robot configuration files
-COPY robot-docker/config.yaml /root/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml
-
 # Add docker configuration
 LABEL version="0.0.2"
 LABEL permissions='{\
