@@ -1,203 +1,161 @@
-# [BlueOS SGP-Tools](https://www.itskalvik.com/sgp-tools/blueos.html)
-
 <div style="text-align:left">
-<p><a href="https://www.itskalvik.com/sgp-tools/blueos.html">
-<img width="472" src="../.assets/blueos_sgptools.png">
+<p><a href="https://github.com/itskalvik/docker-sgp-tools/tree/main">
+<img width="75%" src="../.assets/blueos_sgptools.png">
 </a></p>
 </div>
 
-### A BlueOS Extension for Autonomous Approximate Bathymetric Surveys
+A BlueOS extension that enables **fully autonomous and adaptive bathymetric surveys** on the BlueBoat and any ArduPilot-based ASV using SGP-Tools. Powered by the latest research in Informative Path Planning (IPP).
 
-## What Does It Do?
-Autonomous Surface Vehicles (ASVs), such as the [BlueRobotics BlueBoat](https://bluerobotics.com/store/boat/blueboat/blueboat/), are well-suited for bathymetric surveys. However, it is often the case that an exhaustive survey mapping the depth at every location in an area is infeasible or unnecessary. In such cases, we can leverage variations in the underwater terrain to determine a few critical locations for data collection, which would result in a good approximation of the area's bathymetry.
+## 🌟 Features
+* **Automatic Waypoint Generation:** Generates efficient survey routes from your QGroundControl geofence polygon.
 
-The [SGP-Tools python library](https://www.itskalvik.com/sgp-tools) provides path planners to address the above problem, known as the informative path planning problem. The BlueOS SGP-Tools extension uses this library to determine ideal locations for the ASV to collect data and controls the ASV to autonomously visit the selected locations.
+* **Autonomous & Adaptive Missions:** Arms, runs, and disarms the ASV automatically, adapting routes in real time based on sensor data.
 
-The following shows our path planner adaptively planning a path for an aerial drone with a downward-facing camera tasked with surveying a given area:
-<div style="text-align:left">
-<img width="472" src="../.assets/AIPP-non-point_sensing.gif">
-</div>
+* **Supported Sensors:** Works with Ping1D, GPS, and more (fully configurable in config.yaml).
 
-The following shows the underwater terrain estimated using data collected by our package running on an autonomous surface vehicle equipped with the Ping2 sonar:
-<div style="text-align:left">
-<img width="472" src="../.assets/reconstruction.gif">
-</div>
+* **Persistent Data Logging:** Stores mission logs and collected data as HDF5 files for post-mission analysis and map reconstruction.
 
+* **Onboard Visualization:** Easily publish mission results for real-time or offline viewing in [Foxglove](https://foxglove.dev/product) or Jupyter Notebook.
 
-## Setup
-- This extension works only on 64-bit version of [BlueOS](https://github.com/bluerobotics/BlueOS). You can get the latest stable 64-bit image of BlueOS for Raspberry Pi from [here](https://github.com/bluerobotics/BlueOS/releases/latest/).
+* **Easy Plan Upload:** Drag and drop QGroundControl plan files with geofence directly into `/usr/blueos/extensions/sgptools`.
 
-- The extension requires over 4GB of memory+swap. Please ensure that the swap size is large enough to accommodate the extension. The extension will copy the shell script ```config_swap.sh``` to ```/usr/blueos/extensions/sgptools/``` folder on the underlying device. You can use this script to increase the swap size before starting the path planner. 
+* **Web Terminal Access:** Launch, debug, and analyze missions through the BlueOS browser UI.
 
-    You will have to use [```Pirate Mode```](https://blueos.cloud/docs/1.0/usage/advanced/) to access BlueOS's built-in terminal and run the script on the underlying device via the ```red-pill``` utility. Use the following commands to enable ```red-pill``` and increase the swap size: 
-    
-    ```
-    red-pill
-    ```
-    
-    ```
-    sudo bash /usr/blueos/extensions/sgptools/config_swap.sh
-    ```
+* **Configurable & Extensible:** Quickly modify sensors, mission types, and planner options via YAML config—add new models with ease.
 
-    <div style="text-align:left">
-    <img width="472" src="../.assets/upload_mission.gif">
-    </a></p>
-    </div>
+* **Integrated Simulator:** Test, develop, and validate survey missions in a realistic Gazebo & SITL environment using our dedicated [simulator docker container](https://github.com/itskalvik/docker-sgp-tools).
 
-## Usage
-### Starting a Mission
-1. First, we need to define the survey area and the robot launch location. The extension can read this data from [QGC plan files](https://docs.qgroundcontrol.com/Stable_V4.3/en/qgc-user-guide/plan_view/plan_geofence.html). The survey area and launch position must be defined using a **polygon-shaped** geofence drawn in [QGC](https://qgroundcontrol.com/) and saved as ```mission.plan```.
+* **Minimal Setup:** Installs in seconds from the BlueOS App Store; no complex setup required.
 
+* **Multi-Arch & Platform Support:** Runs on ARM64 (Raspberry Pi), AMD64, and any ArduPilot-compatible ASV with sufficient memory (4GB+).                           |
+
+## 📋 Prerequisites
+* 64-bit [BlueOS](https://github.com/bluerobotics/BlueOS/releases) running on Raspberry Pi 4 or similar (ARM64) or AMD64 platform
+* At least **4GB RAM + swap** (see Swap Setup below)
+* Compatible sensors (e.g., Ping1D sonar)
+
+## 🧰 Installation
+#### Install Directly from the BlueOS App Store
+1. Open BlueOS in your browser (e.g., `http://blueos.local/`)
+2. Go to **Extensions** tab
+3. Find **SGP-Tools** in the App Store and click **Install**
+4. The extension will auto-launch on boot
+
+## ⚙️ Usage
+
+### Upload Your Survey Area Plan
+1. Use [QGroundControl](https://qgroundcontrol.com/) to draw your geofence and home position
+2. Save as `mission.plan`
     <div style="text-align:left">
     <img width="472" src="../.assets/generate_plan.gif">
     </a></p>
     </div>
 
-2. Once you have the plan file, copy it to the robot using the ```File Browser``` feature in BlueOS's [```Pirate Mode```](https://blueos.cloud/docs/1.0/usage/advanced/). The ```mission.plan``` file should be uploaded to the following directory: ```/extensions/sgptools/```
-
-    Once the ```mission.plan``` file is uploaded, restart the extension to ensure that the new file is used for the mission.
-
+3. Upload to `/usr/blueos/extensions/sgptools/` in BlueOS (using `File Browser` in `Pirate Mode`)
     <div style="text-align:left">
     <img width="472" src="../.assets/upload_mission.gif">
     </a></p>
     </div>
 
-3. Finally, use the terminal provided by the SGP-Tools extension to start the mission with the following command:
+### Configure (Optional)
+* Advanced users can edit `/root/config.yaml` in the SGP-Tools web terminal to:
+    * Select/modify sensor config
+    * Change mission type (`AdaptiveIPP`, `IPP`, `Waypoint`)
+    * Adjust optimization parameters
+
+    See the [ros_sgp_tools](https://github.com/itskalvik/ros_sgp_tools) README for configuration details.
+
+### Start Your Mission
+
+1. Open the SGP-Tools web terminal from the BlueOS UI (left menu)
+2. Start the planner:
     ```
-    ros2 launch ros_sgp_tools single_robot.launch.py
+    ros2 launch ros_sgp_tools asv.launch.py
     ```
+    * The vehicle will arm, start the survey, and collect data automatically
 
     <div style="text-align:left">
     <img width="472" src="../.assets/start_mission.gif">
     </a></p>
     </div>
 
-### Viewing the Data after a Mission
-The sensor data, along with the corresponding GPS coordinates, will be logged to an [HDF5](https://docs.h5py.org/en/stable/) file in the ```DATA_FOLDER```, where the ```mission.plan``` was uploaded. 
+### Data Visualization
+* After the mission, you can visualize collected data via:
+    ```
+    ros2 launch ros_sgp_tools visualize_data.launch.py
+    ```
+* Then open [Foxglove](https://app.foxglove.dev/) in your browser, and connect to your ASV’s IP to view the bathymetry data
 
-We can estimate the bathymetry of the entire survey area using the collected data and visualize a normalized version with the following command:
+* ⚠️ Do not run this during the mission, as it will disrupt the path planner
 
-⚠️ Do not run this during the mission, as it will disrupt the path planner
-```
-ros2 launch ros_sgp_tools visualize_data.launch.py
-```
+    <div style="text-align:left">
+    <img width="472" src="../.assets/data_viz.gif">
+    </a></p>
+    </div>
 
-The above command will publish a point cloud that can be viewed using [foxglove](https://foxglove.dev/product). You can access it from a web browser at [https://app.foxglove.dev/](https://app.foxglove.dev/). Use the ```open connection``` feature and change the address from ```localhost``` to the IP address of the ASV.
+## 💾 Persistent Storage
 
-<div style="text-align:left">
-<img width="472" src="../.assets/data_viz.gif">
-</a></p>
-</div>
+The extension maps:
 
-You can control the point cloud density using the ```num_samples``` parameter. You can set this from foxglove's ```Parameters``` panel.
+* Host: `/usr/blueos/extensions/sgptools/`
+* Container: `/root/ros2_ws/src/ros_sgp_tools/launch/data/`
 
-By default, the latest mission log will be visualized. You can visualize a specific mission log using the following command (replace ```<log folder name>``` with  the log folder name):
+This directory is persistent and stores:
 
-```
-ros2 launch ros_sgp_tools visualize_data.launch.py mission_log:=<log folder name>
-```
+* `mission.plan`
+* `config.yaml`
+* All mission logs: `IPP-mission-<timestamp>/`
+* Swap configuration script: `config_swap.sh`
 
-### Simulator
-You can test your mission or develop new algorithms in our companion ROS2/Gazebo [simulator](https://www.itskalvik.com/sgp-tools/docker.html)
+## 🧠 Swap Setup & Memory Requirements
 
-## Parameters
-You can control the following extension parameters by running the following command in the terminal provided by the SGP-Tools extension:
-
-```
-export <parameter_name>=<parameter_value>
-```
-
-The parameters reset to their default values after rebooting. They can be made permanent by configuring the parameters using the app environment variables on the BlueOS extensions page in pirate mode.
-
-### Available Parameters: 
-
-* ```PING1D_PORT``` (```default: /dev/ttyUSB0```):
-    - Specifies the device to which the Ping1D sonar is mounted. You can get the device port from the ```Ping Sonar Devices``` page in BlueOS.
-
-* ```NUM_WAYPOINTS``` (```default: 20```):
-    - The number of waypoints optimized by the path planner.
-    - Increasing the number of waypoints results in a more complex path that covers a larger area.
-    - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
-
-* ```SAMPLING_RATE``` (```default: 2```): 
-    - The number of points to sample along each edge of the path during path planning. The default value of ```2```  means that only the vertices of the path are used.
-    - The path planner assumes the data is collected only at the sampled points. Increasing the sampling rate allows the planner to better approximate the information along the entire path, thereby resulting in more informative paths.
-    - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
-
-* ```KERNEL``` (```default: RBF```): 
-    - The kernel function used in the IPP approach for online IPP updates. Currently available options: `RBF`, `Attentive`, `Neural`, and `None`
-    - The default `RBF` stationary kernel function is fast enough to run on a Raspberry Pi 4. The non-stationary kernel functions `Attentive` and `Neural` can result in more informative paths but require more computational power.
-    - When `None`, the survey mission path from the mission.plan file is used. This requires you to include a survey mission defined within the geofence. Note that the survey mission should not include any explicitly defined waypoints. 
-    - Recommend using a non-stationary kernel only when running BlueOS on a high-performance SoC, such as the Nvidia Jetson platform.
-
-* ```DATA_BUFFER_SIZE``` (```default: 200```):
-    - The number of sensor data samples to collect before using the data to update the model parameters, which, in turn, will be used to update future waypoints.
-    - Increasing the buffer size will allow the planner to compute better parameter estimates, which will result in more informative paths.
-    - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
-
-* ```TRAIN_PARAM_INDUCING``` (```default: False```):
-    - Enables training the inducing points of the parameter model (sparse Gaussian process) in addition to the kernel parameters during the path update.
-    - Enabling this feature will result in more accurate parameter estimates and more informative paths.
-    - Recommend increasing only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
-
-* ```NUM_PARAM_INDUCING``` (```default: 40```):
-    - The number of inducing points used in the parameter model (sparse Gaussian process).
-    - Increasing the number of inducing points will result in more accurate parameter estimates and more informative paths.
-    - Recommend enabling only when the default setting results in a poor reconstruction of the environment, as this increases the computational cost and leads to slower online path updates.
-
-* ```ADAPTIVE_IPP``` (```default: True```):
-    - Enables adaptive informative path planning.
-    - When enabled, it uses the data streaming from the sonar to learn the correlations in the underwater bathymetry and further optimizes the future waypoints to collect even more informative data.
-    - Recommend disabling it if the onboard sonar is currently unsuppored by this package. 
+* At least **4GB of RAM or swap** is required.
+* The extension includes a swap configuration script:
+`/usr/blueos/extensions/sgptools/config_swap.sh`
+* **Increase swap (if needed):**
+    * In BlueOS, open a terminal (Pirate Mode), then run:
     
-* ```NAMESPACE``` (```default: robot_0```): 
-    - ROS2 namespace, useful when multiple ROS2 robots are operating on the same network.
-    - Currently, only the single robot planner is fully supported.
+    ```bash
+    red-pill
+    ```
     
-* ```DATA_TYPE``` (```default: Ping1D```): 
-    - Type of sensor to be used by the path planner. 
-    - Currently, only the [BlueRobotics Ping Sonar](https://bluerobotics.com/store/sonars/echosounders/ping-sonar-r2-rp/) is supported.
+    ```bash
+    sudo bash /usr/blueos/extensions/sgptools/config_swap.sh
+    ```
 
-* ```FCU_URL``` (```default: tcp://0.0.0.0:5777@```):
-    - URL of the flight controller. This should only be changed if running the package on a non-BlueOS platform.
+## 🧪 Simulation & Testing with the SGP-Tools Simulator
+Want to experiment, develop, or validate missions before deploying to the water?
 
-## Disclaimer ⚠️
+The [docker-sgp-tools](https://github.com/itskalvik/docker-sgp-tools) repository includes a **fully integrated Gazebo simulator container** with all the tools you need for realistic software-in-the-loop (SITL) testing.
+
+### 🚀 Simulator Features
+* **Gazebo Simulation:** Realistic 3D environment with the BlueBoat ASV model and waves.
+
+* **ArduPilot SITL:** Software-in-the-loop autopilot runs your real survey missions.
+
+* **SGP-Tools & ROS 2:** The full path planning stack, exactly as on your robot.
+
+## 📝 Notes and Troubleshooting
+
+* **Extension won’t launch / out of memory:**
+    
+    Run the swap setup, and ensure enough memory is available.
+
+* **No mission data or logs:**
+    
+    Make sure the `Ping 1D` port is correctly listed in the `config.yaml`
+
+* **Cannot connect via Foxglove:**
+
+    Verify network settings, and that Foxglove bridge is running.
+
+## 📚 More Info & Documentation
+
+* [SGP-Tools project site](https://www.sgp-tools.com/)
+* [ros_sgp_tools package](https://github.com/itskalvik/ros_sgp_tools)
+* [SGP-Tools Docker images](https://github.com/itskalvik/docker-sgp-tools)
+* [QGroundControl plan files](https://docs.qgroundcontrol.com/Stable_V4.3/en/qgc-user-guide/plan_view/plan_view.html)
+* [BlueOS Docs](https://blueos.cloud/docs/latest/usage/overview/)
+
+## ⚠️ Disclaimer 
 This extension, when executed properly, will take control of the ASV and could potentially collide the vehicle with obstacles in the environment. Please use it with caution.
-
-## About
-Please consider citing the following papers if you use this extension in your academic work :smile:
-
-```
-@misc{JakkalaA23SP,
-AUTHOR={Kalvik Jakkala and Srinivas Akella},
-TITLE={Efficient Sensor Placement from Regression with Sparse Gaussian Processes in Continuous and Discrete Spaces},
-NOTE= {Preprint},
-YEAR={2023},
-URL={https://www.itskalvik.com/research/publication/sgp-sp/},
-}
-
-@inproceedings{JakkalaA24IPP,
-AUTHOR={Kalvik Jakkala and Srinivas Akella},
-TITLE={Multi-Robot Informative Path Planning from Regression with Sparse Gaussian Processes},
-booktitle={IEEE International Conference on Robotics and Automation, {ICRA}},
-YEAR={2024},
-PUBLISHER = {{IEEE}},
-URL={https://www.itskalvik.com/research/publication/sgp-ipp/}
-}
-
-@inproceedings{JakkalaA25AIPP,
-AUTHOR={Kalvik Jakkala and Srinivas Akella},
-TITLE={Fully Differentiable Adaptive Informative Path Planning},
-booktitle={IEEE International Conference on Robotics and Automation, {ICRA}},
-YEAR={2025},
-PUBLISHER = {{IEEE}},
-URL={https://www.itskalvik.com/research/publication/sgp-aipp/}
-}
-``` 
-
-## Acknowledgements
-This work was funded in part by the UNC Charlotte Office of Research and Economic Development and by NSF under Award Number IIP-1919233.
-
-## License
-The SGP-Tools software suite is licensed under the terms of the Apache License 2.0.
-See LICENSE for more information.
