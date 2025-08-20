@@ -1,6 +1,6 @@
 services:
   sgptools:
-    image: itskalvik/sgp-tools:0.0.2
+    image: itskalvik/sgp-tools:beta
     build:
       context: ./
       platforms:
@@ -8,7 +8,7 @@ services:
           - "linux/amd64"
       dockerfile: robot-docker/Dockerfile
       args:
-        - ROS_DISTRO=humble
+        - ROS_DISTRO=jazzy
 
     # Enabling GPU access with Compose
     # https://docs.docker.com/compose/gpu-support/

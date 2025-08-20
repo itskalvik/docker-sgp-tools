@@ -1,5 +1,6 @@
-ARG ROS_DISTRO=humble
+ARG ROS_DISTRO=jazzy
 FROM ros:$ROS_DISTRO-ros-base
+ENV DEBIAN_FRONTEND=noninteractive PIP_BREAK_SYSTEM_PACKAGES=1
 WORKDIR /root/
 
 # Install dependent packages with apt-get and pip
@@ -9,20 +10,17 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     && apt-get -y install libc-bin \
     && apt-get install -q -y --no-install-recommends \
     tmux nano nginx wget git \
-    python3-pip python3-dev \
-    libhdf5-dev \
-    libgeographic-dev \
+    python3-pip python3-dev python3-venv \
+    libgeographiclib-dev \
     build-essential \
     && apt-get autoremove -y \
     && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip3 install --no-cache-dir -U pip setuptools==70.0.0
+    && rm -rf /var/lib/apt/lists/*
 
 # Build ROS2 workspace with sgptools
 COPY ros2_ws /root/ros2_ws
 RUN cd /root/ros2_ws/ \
     && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
-    && python3 -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && apt-get update \
     && rosdep install --from-paths src --ignore-src -y --rosdistro $ROS_DISTRO \
@@ -79,7 +77,7 @@ RUN mkdir -p /root/.config_files/ \
     && cp -r /root/ros2_ws/src/ros_sgp_tools/launch/data/* /root/.config_files/
 
 # Add docker configuration
-LABEL version="0.0.2"
+LABEL version="0.0.3"
 LABEL permissions='{\
   "NetworkMode": "host",\
   "HostConfig": {\
