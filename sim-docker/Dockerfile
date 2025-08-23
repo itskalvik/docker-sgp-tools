@@ -120,6 +120,7 @@ RUN cd /home/$USERNAME/ \
     && make -j4
 
 # Build Wave Sim and ros_gz packages
+COPY --chown=$USER_UID:$USER_GID sim-docker/CMakeLists.txt /home/$USERNAME/
 RUN sudo apt-get -q update \
     && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
     && sudo apt-get autoremove -y \
@@ -128,6 +129,7 @@ RUN sudo apt-get -q update \
     && cd /home/$USERNAME/gz_ws/src \
     && git clone https://github.com/srmainwaring/asv_wave_sim.git --depth 1 \
     && cd /home/$USERNAME/gz_ws/ \
+    && mv /home/$USERNAME/CMakeLists.txt /home/$USERNAME/gz_ws/src/asv_wave_sim/gz-waves/CMakeLists.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install --merge-install --cmake-args \
                     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
