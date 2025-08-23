@@ -8,10 +8,13 @@ services:
           - "linux/amd64"
       dockerfile: sim-docker/Dockerfile
       args:
-        - ROS_DISTRO=humble
-        - GZ_VERSION=garden
+        - ROS_DISTRO=jazzy
+        - GZ_VERSION=harmonic
 
     environment:
+      # ROS settings
+      - RCUTILS_COLORIZED_OUTPUT=1
+
       # Set a fancy prompt (See ~/.bashrc in the container)
       - TERM=xterm-256color
       - NVIDIA_VISIBLE_DEVICES=all
@@ -24,7 +27,7 @@ services:
       - PULSE_SERVER
 
     volumes:
-      - ./ros2_ws/src:/home/admin/ros2_ws/src
+      - ./ros2_ws/src:/home/ubuntu/ros2_ws/src
       - /dev:/dev
 
       # WSLg settings

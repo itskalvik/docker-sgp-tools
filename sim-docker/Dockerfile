@@ -1,23 +1,43 @@
-ARG ROS_DISTRO=humble
+ARG ROS_DISTRO=jazzy
 FROM  osrf/ros:$ROS_DISTRO-desktop
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Configure a new non-root user
-ARG USERNAME=admin
+# Update username in docker-compose as well
+ARG USERNAME=ubuntu
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
-    && usermod -a -G dialout $USERNAME
+# Create group and user (idempotent)
+RUN groupadd -g "$GID" "$USERNAME" || true \
+ && useradd -m -u "$UID" -g "$GID" -s /bin/bash "$USERNAME" || true \
+ && usermod -aG sudo "$USERNAME"
+
+# Enable passwordless sudo for the sudo group
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/99-nopasswd \
+ && chmod 0440 /etc/sudoers.d/99-nopasswd
 
 # Switch to the non-root user for the rest of the installation
 USER $USERNAME
 ENV USER=$USERNAME
 WORKDIR /home/$USERNAME
+
+# Install NVIDIA software
+RUN sudo apt-get update \
+    && sudo apt-get -q -y upgrade \
+    && sudo apt-get install -y -qq --no-install-recommends \
+    libglvnd0 \
+    libgl1 \
+    libglx0 \
+    libegl1 \
+    libxext6 \
+    libx11-6 \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/*
+
+# Env vars for the nvidia-container-runtime.
+ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute QT_X11_NO_MITSHM=1
 
 # Install apt general packages
 RUN sudo apt-get -q update \
@@ -31,15 +51,16 @@ RUN sudo apt-get -q update \
     wget \
     gnupg \
     nano \
+    neovim \
     software-properties-common \
     libhdf5-dev \
-    libgeographic-dev \
+    libgeographiclib-dev \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/*
 
-# Install Gazebo Garden: https://gazebosim.org/docs/garden/install_ubuntu
-ARG GZ_VERSION=garden
+# Install Gazebo: https://gazebosim.org/docs/harmonic/install_ubuntu
+ARG GZ_VERSION=harmonic
 ENV GZ_VERSION=$GZ_VERSION
 RUN sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
@@ -72,21 +93,25 @@ RUN sudo apt-get -q update \
     && sudo apt-get clean -y \
     && sudo rm -rf /var/lib/apt/lists/* \
     && wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh \
-    && chmod +x install_geographiclib_datasets.sh \
     && sudo bash ./install_geographiclib_datasets.sh \
     && rm install_geographiclib_datasets.sh
 
 # Setup ArduPilot SITL
 ENV SKIP_AP_EXT_ENV=1 SKIP_AP_GRAPHIC_ENV=1 SKIP_AP_COV_ENV=1 SKIP_AP_GIT_CHECK=1
-RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules --depth 1 -b Rover-4.5 \
+RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules --depth 1 \
     && cd /home/$USERNAME/ardupilot \
     && Tools/environment_install/install-prereqs-ubuntu.sh -y \
-    && cd /home/$USERNAME/ardupilot \
     && modules/waf/waf-light configure --board sitl \
-    && modules/waf/waf-light build --target bin/ardurover
+    && modules/waf/waf-light build --target bin/ardurover \
+    && echo "source /home/${USERNAME}/venv-ardupilot/bin/activate" >> /home/$USERNAME/.bashrc
 
 # Setup ardupilot_gazebo plugin
 RUN cd /home/$USERNAME/ \
+    && sudo apt update \
+    && sudo apt install cppzmq-dev ros-$ROS_DISTRO-ros-gz -y \
+    && sudo apt-get autoremove -y \
+    && sudo apt-get clean -y \
+    && sudo rm -rf /var/lib/apt/lists/* \
     && git clone https://github.com/ArduPilot/ardupilot_gazebo.git --depth 1 \
     && cd ardupilot_gazebo \
     && mkdir build \
@@ -94,26 +119,8 @@ RUN cd /home/$USERNAME/ \
     && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     && make -j4
 
-# Install NVIDIA software
-RUN sudo apt-get update \
-    && sudo apt-get -q -y upgrade \
-    && sudo apt-get install -y -qq --no-install-recommends \
-    libglvnd0 \
-    libgl1 \
-    libglx0 \
-    libegl1 \
-    libxext6 \
-    libx11-6 \
-    && sudo apt-get autoremove -y \
-    && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/*
-
-# Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute QT_X11_NO_MITSHM=1
-
-# Build Wave Sim
+# Build Wave Sim and ros_gz packages
 RUN sudo apt-get -q update \
-    && python3 -m pip install --no-cache-dir -U pip setuptools packaging -U \
     && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
     && sudo apt-get autoremove -y \
     && sudo apt-get clean -y \
@@ -143,29 +150,23 @@ RUN cd /home/$USERNAME/ \
 # Build ROS2 workspace with the ping sonar package
 RUN mkdir -p /home/$USERNAME/ping_ws/src/ \
     && cd /home/$USERNAME/ping_ws/ \
-    && python3 -m pip install --no-cache-dir -U pip setuptools==79.0.1 \
     && git clone https://github.com/itskalvik/bluerobotics_sonar.git --depth 1 /home/$USERNAME/ping_ws/src \
-    && sudo apt-get update \
-    && rosdep install --from-paths src --ignore-src -r -y \
+    && rosdep update \
+    && sudo rosdep install --from-paths src --ignore-src -r -y \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install \
-    && sudo apt-get autoremove -y \
-    && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/* \
     && echo "source /home/$USERNAME/ping_ws/install/setup.sh " >> ~/.bashrc
 
 # Build ROS2 workspace with sgptools
 ENV DATA_FOLDER=/home/$USERNAME/ros2_ws/src/ros_sgp_tools/launch/data/
-COPY --chown=$USER_UID:$USER_GID ros2_ws /home/$USERNAME/ros2_ws
+COPY --chown=$USER_UID:$USER_GID ros2_ws/src/ /home/$USERNAME/ros2_ws/src/
 RUN cd /home/$USERNAME/ros2_ws/src \
+    && . /home/$USERNAME/venv-ardupilot/bin/activate \
     && python3 -m pip install --no-cache-dir -r mavros_control/requirements.txt \
     && python3 -m pip install --no-cache-dir -r ros_sgp_tools/requirements.txt \
     && cd /home/$USERNAME/ros2_ws \
-    && sudo apt-get -q update \
+    && rosdep update \
     && sudo rosdep install -r --from-paths src -i -y --rosdistro $ROS_DISTRO \
-    && sudo apt-get autoremove -y \
-    && sudo apt-get clean -y \
-    && sudo rm -rf /var/lib/apt/lists/* \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install \
     && echo "source /ros_entrypoint_sitl.sh" >> /home/$USERNAME/.bashrc \
@@ -173,7 +174,6 @@ RUN cd /home/$USERNAME/ros2_ws/src \
 
 COPY sim-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 RUN ln -s "/home/${USERNAME}/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml" "/home/${USERNAME}/config.yaml"
-ENV RCUTILS_COLORIZED_OUTPUT=1
 
 # Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
