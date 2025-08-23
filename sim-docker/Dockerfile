@@ -120,6 +120,7 @@ RUN cd /home/$USERNAME/ \
     && make -j4
 
 # Build Wave Sim and ros_gz packages
+# CMakeLists.txt patch details: https://github.com/srmainwaring/asv_wave_sim/issues/168#issuecomment-2208174705
 COPY --chown=$USER_UID:$USER_GID sim-docker/CMakeLists.txt /home/$USERNAME/
 RUN sudo apt-get -q update \
     && sudo apt-get install -y -qq --no-install-recommends libcgal-dev libfftw3-dev \
