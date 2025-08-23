@@ -1,6 +1,6 @@
 services:
   sgptools:
-    image: itskalvik/sgp-tools:beta
+    image: itskalvik/sgp-tools:0.0.3
     build:
       context: ./
       platforms:
