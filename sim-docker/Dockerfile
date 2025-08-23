@@ -127,10 +127,7 @@ RUN sudo apt-get -q update \
     && mkdir -p /home/$USERNAME/gz_ws/src \
     && cd /home/$USERNAME/gz_ws/src \
     && git clone https://github.com/srmainwaring/asv_wave_sim.git --depth 1 \
-    && git clone https://github.com/gazebosim/ros_gz.git -b $ROS_DISTRO --depth 1 \
     && cd /home/$USERNAME/gz_ws/ \
-    && rosdep update \
-    && sudo rosdep install -r --from-paths src/ros_gz -i -y --rosdistro $ROS_DISTRO \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && colcon build --symlink-install --merge-install --cmake-args \
                     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
