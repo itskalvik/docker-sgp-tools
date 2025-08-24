@@ -53,6 +53,8 @@ RUN mkdir -p /root/ping_ws/src/ \
     && rm -rf /var/lib/apt/lists/* \
     && echo "source /root/ping_ws/install/setup.sh " >> ~/.bashrc
 
+RUN python3 -m pip install --no-cache-dir -r /root/ros2_ws/src/ros_sgp_tools/requirements.txt
+
 # Setup environment variables to configure ros_sgp_tools
 ENV DATA_FOLDER=/root/ros2_ws/src/ros_sgp_tools/launch/data/ \
     FCU_URL=/dev/ttyACM0:57600 \
