@@ -53,7 +53,7 @@ For **robot deployment** onboard a custom ASV:
 
 ```bash
 docker compose -f robot-compose.yml up -d
-docker compose -f robot-compose.yml exec sgptools-robot bash
+docker compose -f robot-compose.yml exec sgptools bash
 ```
 
 * The `robot-compose.yml` file can be customized for device paths, data log locations, and environment variables as needed.
