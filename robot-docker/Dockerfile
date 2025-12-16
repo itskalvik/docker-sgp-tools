@@ -1,44 +1,59 @@
 ARG ROS_DISTRO=jazzy
 FROM ros:$ROS_DISTRO-ros-base
-ENV DEBIAN_FRONTEND=noninteractive PIP_BREAK_SYSTEM_PACKAGES=1
+
+ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /root/
 
-# Install dependent packages with apt-get and pip
+# Install dependent packages with apt-get
 RUN rm /var/lib/dpkg/info/libc-bin.* \
     && apt-get clean \
     && apt-get update \
     && apt-get -y install libc-bin \
     && apt-get install -q -y --no-install-recommends \
     tmux nano nginx wget git \
-    python3-pip python3-dev python3-venv \
+    python3 python3-pip python3-dev python3-venv \
     libgeographiclib-dev \
     build-essential \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Build ROS2 workspace with sgptools
+# -----------------------------
+# Python venv (used for ALL pip installs)
+# -----------------------------
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv --system-site-packages "${VIRTUAL_ENV}" \
+    && "${VIRTUAL_ENV}/bin/python" -m pip install --no-cache-dir --upgrade pip setuptools wheel
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
+
+# Install sgp-tools-dev into venv
+COPY sgp-tools-dev /root/sgp-tools-dev/
+RUN cd /root/sgp-tools-dev/ \
+    && python -m pip install --no-cache-dir -e .
+
+# Build ROS2 workspace with sgptools (pip installs go into venv)
 COPY ros2_ws /root/ros2_ws
 RUN cd /root/ros2_ws/ \
-    && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
+    && python -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && apt-get update \
     && rosdep install --from-paths src --ignore-src -y --rosdistro $ROS_DISTRO \
-    && sudo apt-get autoremove -y \
-    && sudo apt-get clean -y \
+    && apt-get autoremove -y \
+    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && colcon build --symlink-install --cmake-args -DCMAKE_VERBOSE_MAKEFILE=ON \
     && ros2 run mavros install_geographiclib_datasets.sh \
+    && echo "source ${VIRTUAL_ENV}/bin/activate" >> ~/.bashrc \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
-    && echo "source /root/ros2_ws/install/setup.sh " >> ~/.bashrc \
+    && echo "source /root/ros2_ws/install/setup.sh" >> ~/.bashrc \
     && echo "PYTHONWARNINGS='ignore'; export PYTHONWARNINGS" >> ~/.bashrc
 
-# Install ping-python from source (Newer commits don't seem to work with the ping1d)
+# Install ping-python from source into venv
 RUN cd /root/ \
     && git clone https://github.com/bluerobotics/ping-python.git -b deployment \
     && cd ping-python \
     && git checkout 3d41ddd \
-    && python3 setup.py install --user
+    && python -m pip install --no-cache-dir .
 
 # Build ROS2 workspace with the ping sonar package
 RUN mkdir -p /root/ping_ws/src/ \
@@ -51,9 +66,7 @@ RUN mkdir -p /root/ping_ws/src/ \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && echo "source /root/ping_ws/install/setup.sh " >> ~/.bashrc
-
-RUN python3 -m pip install --no-cache-dir -r /root/ros2_ws/src/ros_sgp_tools/requirements.txt
+    && echo "source /root/ping_ws/install/setup.sh" >> ~/.bashrc
 
 # Setup environment variables to configure ros_sgp_tools
 ENV DATA_FOLDER=/root/ros2_ws/src/ros_sgp_tools/launch/data/ \
@@ -127,4 +140,19 @@ RUN ln -s "/root/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml" "/root/confi
 
 # Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
-ENTRYPOINT [ "/start.sh" ]
+
+# -----------------------------
+# Startup: activate venv then run /start.sh
+# -----------------------------
+RUN printf '%s\n' \
+  '#!/usr/bin/env bash' \
+  'set -e' \
+  'if [[ -n "${VIRTUAL_ENV:-}" && -f "${VIRTUAL_ENV}/bin/activate" ]]; then' \
+  '  source "${VIRTUAL_ENV}/bin/activate"' \
+  'fi' \
+  'exec "$@"' \
+  > /entrypoint.sh \
+  && chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/start.sh"]
