@@ -34,6 +34,7 @@ RUN cd /root/sgp-tools-dev/ \
 # Build ROS2 workspace with sgptools (pip installs go into venv)
 COPY ros2_ws /root/ros2_ws
 RUN cd /root/ros2_ws/ \
+    && python -m pip install --no-cache-dir -r src/ros_sgp_tools/requirements.txt \
     && python -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && apt-get update \
