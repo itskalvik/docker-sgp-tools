@@ -175,6 +175,11 @@ RUN cd /home/$USERNAME/ros2_ws/src \
 COPY sim-docker/ros_entrypoint_sitl.sh /ros_entrypoint_sitl.sh
 RUN ln -s "/home/${USERNAME}/ros2_ws/src/ros_sgp_tools/launch/data/config.yaml" "/home/${USERNAME}/config.yaml"
 
+COPY --chown=$USER_UID:$USER_GID sgp-tools-dev/ /home/$USERNAME/sgp-tools-dev/
+RUN . /home/$USERNAME/venv-ardupilot/bin/activate \
+    && cd sgp-tools-dev/ \
+    && python3 -m pip install --no-cache-dir -e .
+
 # Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT ["/ros_entrypoint_sitl.sh"]
